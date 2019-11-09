@@ -100,7 +100,8 @@
 		};
 		L1: interrupt-controller@c000000 {
 			#interrupt-cells = <1>;
-			compatible = "riscv,plic0";
+			//compatible = "riscv,plic0";
+			compatible = "";
 			interrupt-controller;
 			interrupts-extended = <&L4 11 &L4 9 &L7 11 &L7 9>;
 			reg = <0x0 0xc000000 0x0 0x4000000>;
