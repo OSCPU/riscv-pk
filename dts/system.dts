@@ -36,33 +36,6 @@
 				interrupt-controller;
 			};
 		};
-		L9: cpu@1 {
-			clock-frequency = <0>;
-			compatible = "sifive,rocket0", "riscv";
-			d-cache-block-size = <64>;
-			d-cache-sets = <64>;
-			d-cache-size = <16384>;
-			d-tlb-sets = <1>;
-			d-tlb-size = <32>;
-			device_type = "cpu";
-			i-cache-block-size = <64>;
-			i-cache-sets = <64>;
-			i-cache-size = <16384>;
-			i-tlb-sets = <1>;
-			i-tlb-size = <32>;
-			mmu-type = "riscv,sv39";
-			next-level-cache = <&L11>;
-			reg = <0x1>;
-			riscv,isa = "rv64imac";
-			status = "okay";
-			timebase-frequency = <1000000>;
-			tlb-split;
-			L7: interrupt-controller {
-				#interrupt-cells = <1>;
-				compatible = "riscv,cpu-intc";
-				interrupt-controller;
-			};
-		};
 	};
 	L11: memory@100000000 {
 		device_type = "memory";
@@ -75,7 +48,7 @@
 		ranges;
 		L2: clint@2000000 {
 			compatible = "riscv,clint0";
-			interrupts-extended = <&L4 3 &L4 7 &L7 3 &L7 7>;
+			interrupts-extended = <&L4 3 &L4 7>;
 			reg = <0x0 0xa2000000 0x0 0x10000>;
 			reg-names = "control";
 		};
@@ -86,7 +59,7 @@
 		};
 		L3: debug-controller@0 {
 			compatible = "sifive,debug-013", "riscv,debug-013";
-			interrupts-extended = <&L4 65535 &L7 65535>;
+			interrupts-extended = <&L4 65535>;
 			reg = <0x0 0x0 0x0 0x1000>;
 			reg-names = "control";
 		};
@@ -103,7 +76,7 @@
 			//compatible = "riscv,plic0";
 			compatible = "";
 			interrupt-controller;
-			interrupts-extended = <&L4 11 &L4 9 &L7 11 &L7 9>;
+			interrupts-extended = <&L4 11 &L4 9>;
 			reg = <0x0 0xc000000 0x0 0x4000000>;
 			reg-names = "control";
 			riscv,max-priority = <7>;
