@@ -39,7 +39,7 @@
 	};
 	L11: memory@100000000 {
 		device_type = "memory";
-		reg = <0x0 0x80000000 0x0 0x8000000>;
+		reg = <0x0 0x80000000 0x0 0x1000000>;
 	};
 	L18: soc {
 		#address-cells = <2>;
