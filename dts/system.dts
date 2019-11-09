@@ -76,7 +76,7 @@
 		L2: clint@2000000 {
 			compatible = "riscv,clint0";
 			interrupts-extended = <&L4 3 &L4 7 &L7 3 &L7 7>;
-			reg = <0x0 0x2000000 0x0 0x10000>;
+			reg = <0x0 0xa2000000 0x0 0x10000>;
 			reg-names = "control";
 		};
 		L16: control-plane@20000 {
