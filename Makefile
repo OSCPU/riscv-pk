@@ -18,12 +18,21 @@ RISCV_COPY_FLAGS = --set-section-flags .bss=alloc,contents --set-section-flags .
 
 BBL_REPO_PATH = $(abspath .)
 BBL_BUILD_PATH = ./build
+BBL_BUILD_MAKEFILE = $(BBL_BUILD_PATH)/Makefile
 BBL_ELF_BUILD = $(BBL_BUILD_PATH)/bbl
 BBL_BIN = $(BBL_BUILD_PATH)/bbl.bin
 
 #BBL_PAYLOAD = $(LINUX_ELF)
 BBL_PAYLOAD = dummy_payload
-BBL_CONFIG = --host=riscv64-unknown-elf --with-payload=$(BBL_PAYLOAD) --with-arch=rv64imac --enable-logo
+BBL_CONFIG = --host=riscv64-unknown-elf --with-payload=$(BBL_PAYLOAD) \
+						 --with-arch=rv64imac --enable-logo --enable-print-device-tree
+
+DTB = $(BBL_BUILD_PATH)/system.dtb
+DTS = dts/system.dts
+
+ifeq ($(MAKECMDGOALS),qemu)
+BBL_ENV = CFLAGS=-D__QEMU__
+endif
 
 #--------------------------------------------------------------------
 # Linux variables
@@ -48,17 +57,23 @@ $(BBL_BIN): $(BBL_ELF_BUILD)
 	$(RISCV_COPY) $(RISCV_COPY_FLAGS) $< $@
 	$(RISCV_DUMP) -d $< > $<.txt
 
-$(BBL_BUILD_PATH):
-	mkdir -p $@
-	cd $@ && $(BBL_REPO_PATH)/configure $(BBL_CONFIG)
+$(BBL_BUILD_MAKEFILE):
+	mkdir -p $(@D)
+	cd $(@D) && $(BBL_REPO_PATH)/configure $(BBL_CONFIG)
 
-$(BBL_ELF_BUILD): $(BBL_PAYLOAD) | $(BBL_BUILD_PATH)
-	$(RFS_ENV) $(MAKE) -C $(BBL_BUILD_PATH)
+$(DTB): $(DTS)
+	mkdir -p $(@D)
+	dtc -O dtb -I dts -o $@ $<
 
 dummy_payload:
-	$(MAKE) -C $(BBL_BUILD_PATH) dummy_payload
 
-.PHONY: bbl bbl-clean $(BBL_ELF_BUILD)
+$(BBL_ELF_BUILD): $(BBL_PAYLOAD) $(DTB) $(BBL_BUILD_MAKEFILE)
+	$(BBL_ENV) $(MAKE) -C $(BBL_BUILD_PATH)
+
+bbl-clean:
+	-rm -rf build
+
+.PHONY: bbl bbl-clean dummy_payload #$(BBL_ELF_BUILD)
 
 #--------------------------------------------------------------------
 # Linux rules
@@ -106,7 +121,7 @@ nemu: bbl
 qemu: bbl
 	/home/yzh/software/qemu/riscv64-softmmu/qemu-system-riscv64 -nographic -kernel $(BBL_ELF_BUILD) -machine virt
 
-clean: bbl-clean linux-clean
-	-$(RFS_ENV) $(MAKE) -C $(ROOTFS_PATH) clean
+clean: bbl-clean #linux-clean
+#	-$(RFS_ENV) $(MAKE) -C $(ROOTFS_PATH) clean
 
 .PHONY: default run clean

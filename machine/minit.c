@@ -165,6 +165,11 @@ static void wake_harts()
 
 void init_first_hart(uintptr_t hartid, uintptr_t dtb)
 {
+#ifndef __QEMU__
+  extern char dtb_start;
+  dtb = (uintptr_t)&dtb_start;
+#endif
+
   // Confirm console as early as possible
   query_uart(dtb);
   query_uart16550(dtb);
