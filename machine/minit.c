@@ -62,6 +62,15 @@ static void delegate_traps()
   assert(read_csr(medeleg) == exceptions);
 }
 
+static void dump_misa(uint32_t misa) {
+  int i;
+  for (i = 0; i < 26; i ++) {
+    if (misa & 0x1) printm("%c ", 'A' + i);
+    misa >>= 1;
+  }
+  printm("\n");
+}
+
 static void fp_init()
 {
   if (!supports_extension('D') && !supports_extension('F'))
@@ -76,7 +85,8 @@ static void fp_init()
 #else
   uintptr_t fd_mask = (1 << ('F' - 'A')) | (1 << ('D' - 'A'));
   clear_csr(misa, fd_mask);
-  assert(!(read_csr(misa) & fd_mask));
+  dump_misa(read_csr(misa));
+  //assert(!(read_csr(misa) & fd_mask));
 #endif
 }
 
