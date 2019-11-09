@@ -73,7 +73,7 @@ $(BBL_ELF_BUILD): $(BBL_PAYLOAD) $(DTB) $(BBL_BUILD_MAKEFILE)
 bbl-clean:
 	-rm -rf build
 
-.PHONY: bbl bbl-clean dummy_payload #$(BBL_ELF_BUILD)
+.PHONY: bbl bbl-clean dummy_payload $(BBL_ELF_BUILD)
 
 #--------------------------------------------------------------------
 # Linux rules
