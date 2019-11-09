@@ -1,6 +1,3 @@
-build_dir = $(realpath ./build)
-SW_PATH = $(abspath ../../sw)
-
 #--------------------------------------------------------------------
 # Build tools
 #--------------------------------------------------------------------
@@ -22,10 +19,10 @@ BBL_BUILD_MAKEFILE = $(BBL_BUILD_PATH)/Makefile
 BBL_ELF_BUILD = $(BBL_BUILD_PATH)/bbl
 BBL_BIN = $(BBL_BUILD_PATH)/bbl.bin
 
-#BBL_PAYLOAD = $(LINUX_ELF)
-BBL_PAYLOAD = dummy_payload
+BBL_PAYLOAD = $(LINUX_ELF)
+#BBL_PAYLOAD = dummy_payload
 BBL_CONFIG = --host=riscv64-unknown-elf --with-payload=$(BBL_PAYLOAD) \
-						 --with-arch=rv64imac --enable-logo --enable-print-device-tree
+						 --with-arch=rv64imac --enable-logo #--enable-print-device-tree
 
 DTB = $(BBL_BUILD_PATH)/system.dtb
 DTS = dts/system.dts
@@ -38,13 +35,10 @@ endif
 # Linux variables
 #--------------------------------------------------------------------
 
-LINUX_REPO_PATH = $(SW_PATH)/riscv-linux
-LINUX_BUILD_COMMIT = fd8ef68c06418025354ad0fbe4573be4c78dd30b
+LINUX_REPO_PATH = $(abspath ../riscv-linux)
+LINUX_ELF = $(LINUX_REPO_PATH)/vmlinux
 
-LINUX_ELF_BUILD = $(LINUX_REPO_PATH)/vmlinux
-LINUX_ELF = $(build_dir)/vmlinux
-
-ROOTFS_PATH = $(SW_PATH)/riscv-rootfs
+ROOTFS_PATH = $(abspath ../riscv-rootfs)
 RFS_ENV = RISCV_ROOTFS_HOME=$(ROOTFS_PATH)
 
 #--------------------------------------------------------------------
@@ -79,34 +73,28 @@ bbl-clean:
 # Linux rules
 #--------------------------------------------------------------------
 
-$(LINUX_REPO_PATH): | $(SW_PATH)
+$(LINUX_REPO_PATH):
 	mkdir -p $@
 	@/bin/echo -e "\033[1;31mBy default, a shallow clone with only 1 commit history is performed, since the commit history is very large.\nThis is enough for building the project.\nTo fetch full history, run 'git fetch --unshallow' under $(LINUX_REPO_PATH).\033[0m"
-	git clone --depth 1 https://github.com/LvNA-system/riscv-linux.git $@
-	cd $@ && $(RFS_ENV) $(MAKE) ARCH=riscv emu_defconfig
+	git clone --depth 1 -b noop https://github.com/LvNA-system/riscv-linux.git $@
+	$(RFS_ENV) $(MAKE) -C $@ ARCH=riscv emu_defconfig
 
-$(ROOTFS_PATH): | $(SW_PATH)
+$(ROOTFS_PATH):
 	mkdir -p $@
-	@/bin/echo -e "\033[1;31mPlease manually set the RISCV_ROOTFS_HOME environment variable to $(ROOTFS_PATH).\033[0m"
 	git clone https://github.com/LvNA-system/riscv-rootfs.git $@
 
 linux: $(LINUX_ELF)
 
-$(LINUX_ELF): $(LINUX_ELF_BUILD)
-	ln -sf $(abspath $<) $@
-
-$(LINUX_ELF_BUILD): | $(LINUX_REPO_PATH) $(ROOTFS_PATH)
+$(LINUX_ELF): | $(LINUX_REPO_PATH) $(ROOTFS_PATH)
 	$(RFS_ENV) $(MAKE) -C $(ROOTFS_PATH)
-	cd $(@D) && \
-		git checkout $(LINUX_BUILD_COMMIT) && \
-		(($(RFS_ENV) $(MAKE) CROSS_COMPILE=riscv64-unknown-linux-gnu- ARCH=riscv vmlinux) || (git checkout @{-1}; false)) && \
-		git checkout @{-1}
+	$(RFS_ENV) $(MAKE) -C $(@D) CROSS_COMPILE=riscv64-unknown-linux-gnu- ARCH=riscv vmlinux
+	$(RISCV_DUMP) -d $(LINUX_ELF) > $(BBL_BUILD_PATH)/vmlinux.txt
 
 linux-clean:
 	-rm $(LINUX_ELF)
 	-$(RFS_ENV) $(MAKE) clean -C $(LINUX_REPO_PATH)
 
-.PHONY: linux linux-clean $(LINUX_ELF_BUILD)
+.PHONY: linux linux-clean $(LINUX_ELF)
 
 
 #--------------------------------------------------------------------
@@ -119,7 +107,7 @@ nemu: bbl
 	$(MAKE) -C $(NEMU_HOME) ISA=riscv64 run ARGS="-b $(abspath $(BBL_BIN))"
 
 qemu: bbl
-	/home/yzh/software/qemu/riscv64-softmmu/qemu-system-riscv64 -nographic -kernel $(BBL_ELF_BUILD) -machine virt
+	qemu-system-riscv64 -nographic -kernel $(BBL_ELF_BUILD) -machine virt
 
 clean: bbl-clean #linux-clean
 #	-$(RFS_ENV) $(MAKE) -C $(ROOTFS_PATH) clean
