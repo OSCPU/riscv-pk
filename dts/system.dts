@@ -1,4 +1,5 @@
 /dts-v1/;
+/include/ "platform.dtsi"
 
 / {
 	#address-cells = <2>;
@@ -39,33 +40,18 @@
 	};
 	L11: memory@100000000 {
 		device_type = "memory";
-		reg = <0x0 0x80000000 0x0 0x1000000>;
+		reg = <0x0 0x80000000 0x0 0x800000>;
 	};
 	L18: soc {
 		#address-cells = <2>;
 		#size-cells = <2>;
 		compatible = "freechips,rocketchip-unknown-soc", "simple-bus";
 		ranges;
-		L2: clint@2000000 {
-			compatible = "riscv,clint0";
-			interrupts-extended = <&L4 3 &L4 7>;
-			reg = <0x0 0xa2000000 0x0 0x10000>;
-			reg-names = "control";
-		};
-		L16: control-plane@20000 {
-			compatible = "LvNA,test", "LvNA,test";
-			reg = <0x0 0x20000 0x0 0x10000>;
-			reg-names = "control";
-		};
 		L3: debug-controller@0 {
 			compatible = "sifive,debug-013", "riscv,debug-013";
 			interrupts-extended = <&L4 65535>;
 			reg = <0x0 0x0 0x0 0x1000>;
 			reg-names = "control";
-		};
-		L0: error-device@3000 {
-			compatible = "sifive,error0";
-			reg = <0x0 0x3000 0x0 0x1000>;
 		};
 		L10: external-interrupts {
 			interrupt-parent = <&L1>;
@@ -81,18 +67,6 @@
 			reg-names = "control";
 			riscv,max-priority = <7>;
 			riscv,ndev = <4>;
-		};
-		L13: rom@10000 {
-			compatible = "sifive,rom0";
-			reg = <0x0 0x10000 0x0 0x10000>;
-			reg-names = "mem";
-		};
-		L14: serial@60000000 {
-			compatible = "ns16550a";
-			interrupt-parent = <&L1>;
-			interrupts = <3>;
-			reg = <0x0 0xa10003f8 0x0 0x1000>;
-			reg-names = "control";
 		};
 	};
 };
