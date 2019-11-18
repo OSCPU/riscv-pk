@@ -25,7 +25,7 @@ void uartlite_putchar(uint8_t ch) {
 
 int uartlite_getchar() {
   if (uartlite[UART_LITE_STAT_REG] & UART_LITE_RX_VALID)
-    return uartlite[UART_LITE_RX_FIFO];
+    return (int8_t)uartlite[UART_LITE_RX_FIFO];
   return -1;
 }
 
