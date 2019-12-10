@@ -15,5 +15,13 @@
 			reg = <0x0 0xa10003f8 0x0 0x1000>;
 			reg-names = "control";
 		};
+    sdhci: mmc {
+      compatible = "nemu-sdhost";
+			reg = <0x0 0xa3000000 0x0 0x1000>;
+    };
 	};
+  chosen {
+    //bootargs = "console=/dev/hvc0 root=/dev/mmcblk0 rootfstype=ext4 ro rootwait earlycon=sbi"; // for linux 5.0
+    bootargs = "root=/dev/mmcblk0 rootfstype=ext4 ro rootwait earlycon";
+  };
 };
