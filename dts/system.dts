@@ -27,7 +27,7 @@
 			mmu-type = "riscv,sv39";
 			next-level-cache = <&L11>;
 			reg = <0x0>;
-			riscv,isa = "rv64imac";
+			riscv,isa = "rv64imafdc";
 			status = "okay";
 			timebase-frequency = <1000000>;
 			tlb-split;
@@ -40,7 +40,7 @@
 	};
 	L11: memory@100000000 {
 		device_type = "memory";
-		reg = <0x0 0x80000000 0x0 0x800000>;
+		reg = <0x0 0x80000000 0x0 0x10000000>;
 	};
 	L18: soc {
 		#address-cells = <2>;
