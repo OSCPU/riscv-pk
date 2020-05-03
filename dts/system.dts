@@ -12,7 +12,7 @@
 		timebase-frequency = <1000000>;
 		L6: cpu@0 {
 			clock-frequency = <0>;
-			compatible = "sifive,rocket0", "riscv";
+			compatible = "UCAS,COOSCA1.0", "riscv";
 			d-cache-block-size = <64>;
 			d-cache-sets = <64>;
 			d-cache-size = <16384>;
@@ -38,10 +38,6 @@
 			};
 		};
 	};
-	L11: memory@100000000 {
-		device_type = "memory";
-		reg = <0x0 0x80000000 0x0 0x10000000>;
-	};
 	L18: soc {
 		#address-cells = <2>;
 		#size-cells = <2>;
@@ -52,21 +48,6 @@
 			interrupts-extended = <&L4 65535>;
 			reg = <0x0 0x0 0x0 0x1000>;
 			reg-names = "control";
-		};
-		L10: external-interrupts {
-			interrupt-parent = <&L1>;
-			interrupts = <1 2>;
-		};
-		L1: interrupt-controller@c000000 {
-			#interrupt-cells = <1>;
-			//compatible = "riscv,plic0";
-			compatible = "";
-			interrupt-controller;
-			interrupts-extended = <&L4 11 &L4 9>;
-			reg = <0x0 0xc000000 0x0 0x4000000>;
-			reg-names = "control";
-			riscv,max-priority = <7>;
-			riscv,ndev = <4>;
 		};
 	};
 };
