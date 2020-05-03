@@ -7,6 +7,7 @@
 			interrupts-extended = <&L4 3 &L4 7>;
 			reg = <0x0 0xa2000000 0x0 0x10000>;
 			reg-names = "control";
+      clock-frequency-mhz = <500>;
 		};
 		L14: serial@60000000 {
 			compatible = "ns16550a";

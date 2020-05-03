@@ -305,6 +305,7 @@ struct clint_scan
   const uint32_t *int_value;
   int int_len;
   int done;
+  uint32_t freq_mhz;
 };
 
 static void clint_open(const struct fdt_scan_node *node, void *extra)
@@ -313,6 +314,7 @@ static void clint_open(const struct fdt_scan_node *node, void *extra)
   scan->compat = 0;
   scan->reg = 0;
   scan->int_value = 0;
+  scan->freq_mhz = 0;
 }
 
 static void clint_prop(const struct fdt_scan_prop *prop, void *extra)
@@ -325,6 +327,9 @@ static void clint_prop(const struct fdt_scan_prop *prop, void *extra)
   } else if (!strcmp(prop->name, "interrupts-extended")) {
     scan->int_value = prop->value;
     scan->int_len = prop->len;
+  } else if (!strcmp(prop->name, "clock-frequency-mhz")) {
+    scan->freq_mhz = bswap(prop->value[0]);
+    printm("freq-mhz = %d\n", scan->freq_mhz);
   }
 }
 
@@ -354,6 +359,12 @@ static void clint_done(const struct fdt_scan_node *node, void *extra)
       hls->timecmp = (void*)((uintptr_t)scan->reg + 0x4000 + (index * 8));
     }
     value += 4;
+  }
+
+  volatile uint64_t *freq = (void *)((uintptr_t)scan->reg + 0x8000);
+  if (scan->freq_mhz != 0) {
+    *freq = scan->freq_mhz;
+    printm("CLINT: set frequency to %d MHz\n", scan->freq_mhz);
   }
 }
 
