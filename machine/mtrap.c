@@ -9,6 +9,7 @@
 #include "uart.h"
 #include "uartlite.h"
 #include "uart16550.h"
+#include "xuart.h"
 #include "finisher.h"
 #include "fdt.h"
 #include "unprivileged_memory.h"
@@ -26,6 +27,8 @@ static uintptr_t mcall_console_putchar(uint8_t ch)
 {
   if (uart) {
     uart_putchar(ch);
+  } else if (xuart) {
+    xuart_putchar(ch);
   } else if (uartlite) {
     uartlite_putchar(ch);
   } else if (uart16550) {
@@ -70,6 +73,8 @@ static uintptr_t mcall_console_getchar()
 {
   if (uart) {
     return uart_getchar();
+  } else if (xuart) {
+    return xuart_getchar();
   } else if (uartlite) {
     return uartlite_getchar();
   } else if (uart16550) {
