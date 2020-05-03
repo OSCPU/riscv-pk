@@ -7,10 +7,11 @@
 			interrupts-extended = <&L4 3 &L4 7>;
 			reg = <0x0 0x48000000 0x0 0x10000>;
 			reg-names = "control";
+			clock-frequency-mhz = <500>;
 		};
 		L14: serial@60000000 {
 			compatible = "xilinx,uartlite";
-			interrupt-parent = <&L1>;
+			//interrupt-parent = <&L1>;
 			interrupts = <3>;
 			reg = <0x0 0x40600000 0x0 0x1000>;
 			reg-names = "control";
@@ -23,4 +24,8 @@
   chosen {
     bootargs = "root=/dev/mmcblk0 rootfstype=ext4 ro rootwait earlycon";
   };
+	L11: memory@100000000 {
+		device_type = "memory";
+		reg = <0x0 0x80000000 0x0 0x2000000>;
+	};
 };
