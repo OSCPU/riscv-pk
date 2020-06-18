@@ -43,7 +43,7 @@
 			#address-cells = <1>;
 			#size-cells = <1>;
 			compatible = "xlnx,zynq-slcr", "syscon", "simple-mfd";
-			reg = <0x0 0x41000000 0x0 0x1000>;
+			reg = <0x0 0x49000000 0x0 0x1000>;
 			ranges;
 			L13: clkc {
 				u-boot,dm-pre-reloc;
