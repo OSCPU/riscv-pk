@@ -67,7 +67,7 @@
 		};
 	};
   chosen {
-    bootargs = "root=/dev/mmcblk0p2 rootfstype=ext4 rw rootwait earlycon";
+    bootargs = "root=/dev/mmcblk0p2 rootfstype=ext4 rw rootwait earlycon clk_ignore_unused";
   };
 	L11: memory@100000000 {
 		device_type = "memory";
