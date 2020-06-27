@@ -10,9 +10,11 @@
       clock-frequency-mhz = <60>;
 		};
 		L14: serial@60000000 {
-      compatible = "xlnx,xuartps", "cdns,uart-r1p8";
-			//interrupt-parent = <&L1>;
-			//interrupts = <3>;
+			compatible = "xlnx,xuartps", "cdns,uart-r1p8";
+			clock-names = "uart_clk", "pclk";
+			clocks = <&L13 23>, <&L13 40>;
+			interrupt-parent = <&L1>;
+			interrupts = <2>;
 			reg = <0x0 0x40000000 0x0 0x1000>;
 			reg-names = "control";
 		};
@@ -24,7 +26,7 @@
 			reg = <0x0 0x4c000000 0x0 0x4000000>;
 			reg-names = "control";
 			riscv,max-priority = <7>;
-			riscv,ndev = <1>;
+			riscv,ndev = <3>;
 		};
 		//L10: external-interrupts {
 		//	interrupt-parent = <&L1>;
@@ -37,6 +39,23 @@
 			interrupt-parent = <&L1>;
 			interrupts = <1>;
 			reg = <0x0 0x40100000 0x0 0x1000>;
+		};
+		gem0: ethernet@e000b000 {
+			compatible = "cdns,zynq-gem", "cdns,gem";
+			reg = <0x0 0x4000b000 0x0 0x1000>;
+			interrupts = <3>;
+			interrupt-parent = <&L1>;
+			clocks = <&L13 30>, <&L13 30>, <&L13 13>;
+			clock-names = "pclk", "hclk", "tx_clk";
+			#address-cells = <1>;
+			#size-cells = <0>;
+
+			phy-mode = "rgmii-id";
+			phy-handle = <&ethernet_phy>;
+			ethernet_phy: ethernet-phy@0 {
+				reg = <0>;
+				device_type = "ethernet-phy";
+			};
 		};
 		L12: slcr@F8000000 {
 			u-boot,dm-pre-reloc;
@@ -67,7 +86,11 @@
 		};
 	};
   chosen {
-    bootargs = "root=/dev/mmcblk0p2 rootfstype=ext4 rw rootwait earlycon clk_ignore_unused";
+    bootargs = "console=ttyPS0,115200n8 root=/dev/mmcblk0p2 rootfstype=ext4 rw rootwait earlycon clk_ignore_unused";
+    stdout-path = "serial0:115200n8";
+  };
+  aliases {
+    serial0 = &L14;
   };
 	L11: memory@100000000 {
 		device_type = "memory";
