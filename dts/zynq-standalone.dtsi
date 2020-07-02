@@ -5,7 +5,7 @@
 		L2: clint@2000000 {
 			compatible = "riscv,clint0";
 			interrupts-extended = <&L4 3 &L4 7>;
-			reg = <0x0 0x48000000 0x0 0x10000>;
+			reg = <0x0 0x38000000 0x0 0x10000>;
 			reg-names = "control";
       clock-frequency-mhz = <60>;
 		};
@@ -15,7 +15,7 @@
 			clocks = <&L13 23>, <&L13 40>;
 			interrupt-parent = <&L1>;
 			interrupts = <2>;
-			reg = <0x0 0x40000000 0x0 0x1000>;
+			reg = <0x0 0xe0000000 0x0 0x1000>;
 			reg-names = "control";
 		};
 		L1: interrupt-controller@c000000 {
@@ -23,7 +23,7 @@
 			compatible = "riscv,plic0";
 			interrupt-controller;
 			interrupts-extended = <&L4 9>;
-			reg = <0x0 0x4c000000 0x0 0x4000000>;
+			reg = <0x0 0x3c000000 0x0 0x4000000>;
 			reg-names = "control";
 			riscv,max-priority = <7>;
 			riscv,ndev = <3>;
@@ -38,11 +38,11 @@
 			clocks = <&L13 21>, <&L13 32>;
 			interrupt-parent = <&L1>;
 			interrupts = <1>;
-			reg = <0x0 0x40100000 0x0 0x1000>;
+			reg = <0x0 0xe0100000 0x0 0x1000>;
 		};
 		gem0: ethernet@e000b000 {
 			compatible = "cdns,zynq-gem", "cdns,gem";
-			reg = <0x0 0x4000b000 0x0 0x1000>;
+			reg = <0x0 0xe000b000 0x0 0x1000>;
 			interrupts = <3>;
 			interrupt-parent = <&L1>;
 			clocks = <&L13 30>, <&L13 30>, <&L13 13>;
@@ -62,7 +62,7 @@
 			#address-cells = <1>;
 			#size-cells = <1>;
 			compatible = "xlnx,zynq-slcr", "syscon", "simple-mfd";
-			reg = <0x0 0x49000000 0x0 0x1000>;
+			reg = <0x0 0xf8000000 0x0 0x1000>;
 			ranges;
 			L13: clkc {
 				u-boot,dm-pre-reloc;
