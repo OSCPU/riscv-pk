@@ -5,7 +5,7 @@
 		L2: clint@2000000 {
 			compatible = "riscv,clint0";
 			interrupts-extended = <&L4 3 &L4 7>;
-			reg = <0x0 0x48000000 0x0 0x10000>;
+			reg = <0x0 0x38000000 0x0 0x10000>;
 			reg-names = "control";
 			clock-frequency-mhz = <500>;
 		};
