@@ -106,8 +106,8 @@ default: bbl
 nemu: bbl
 	$(MAKE) -C $(NEMU_HOME) ISA=riscv64 run ARGS="-b $(abspath $(BBL_BIN))"
 
-noop: bbl
-	$(MAKE) -C $(NOOP_HOME) emu IMAGE="$(abspath $(BBL_BIN))"
+nutshell: bbl
+	$(MAKE) -C $(NUTSHELL_HOME) emu IMAGE="$(abspath $(BBL_BIN))"
 
 qemu: bbl
 	qemu-system-riscv64 -nographic -kernel $(BBL_ELF_BUILD) -machine virt
