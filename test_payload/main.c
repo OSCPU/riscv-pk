@@ -1,9 +1,9 @@
-#include "stdio.h"
+#include "kio.h"
 
 char msg[] = "Test Launched!\n";
 
 int main()
 {
-    _puts(msg);
+    printk(msg);
     return 0;
 }
