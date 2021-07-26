@@ -47,6 +47,12 @@ struct fdt_cb {
   void *extra;
 };
 
+struct oscourse_info_t {
+  uint32_t time_base;
+};
+
+extern struct oscourse_info_t oscourse_info;
+
 // Scan the contents of FDT
 void fdt_scan(uintptr_t fdt, const struct fdt_cb *cb);
 uint32_t fdt_size(uintptr_t fdt);
@@ -63,6 +69,7 @@ void query_harts(uintptr_t fdt);
 void query_plic(uintptr_t fdt);
 void query_clint(uintptr_t fdt);
 void query_chosen(uintptr_t fdt);
+void query_oscourse_info(uintptr_t fdt);
 
 // Remove information from FDT
 void filter_harts(uintptr_t fdt, long *disabled_hart_mask);

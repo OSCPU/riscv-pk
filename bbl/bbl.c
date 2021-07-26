@@ -125,6 +125,7 @@ void boot_other_hart(uintptr_t unused __attribute__((unused)))
 void boot_loader(uintptr_t dtb)
 {
   filter_dtb(dtb);
+  query_oscourse_info(dtb);
 #ifdef PK_ENABLE_LOGO
   print_logo();
 #endif

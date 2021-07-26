@@ -7,6 +7,8 @@
 #include "fdt.h"
 #include "mtrap.h"
 
+struct oscourse_info_t oscourse_info;
+
 static inline uint32_t bswap(uint32_t x)
 {
 #if __BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__
@@ -18,6 +20,104 @@ static inline uint32_t bswap(uint32_t x)
   return x;
 #endif
 }
+
+//////////////////////////////////////////// GET PROP //////////////////////////////////////////////
+#define MAX_PATH_SIZE 512
+struct fdt_get_prop_info
+{
+    const char *path;
+    char *buff;
+    const uint32_t *value;
+    int len;
+};
+
+static void fdt_get_prop_dummy(const struct fdt_scan_node *node, void *extra)
+{
+    return;
+}
+static int fdt_get_prop_close(const struct fdt_scan_node *node, void *extra)
+{
+    return 0;
+}
+
+char *simplify_and_strcat(char *dest, const char *src)
+{
+    char *tmp = dest;
+    while (*dest != '\0') {
+        dest++;
+    }
+    while (*src != '\0' && *src != '@') {
+        *dest++ = *src++;
+    }
+    *dest = '\0';
+    return tmp;
+}
+
+static void path_name_helper(const struct fdt_scan_node *node, char *buff)
+{
+    if (node->parent == NULL) {
+        return;
+    }
+
+    path_name_helper(node->parent, buff);
+    strcat(buff, "/");
+    simplify_and_strcat(buff, node->name);
+    return;
+}
+
+static void fdt_get_prop_prop(const struct fdt_scan_prop *prop, void *extra)
+{
+    struct fdt_get_prop_info *info = (struct fdt_get_prop_info *)extra;
+    if (info->value != NULL) return;
+
+    char *buff = info->buff;
+    buff[0]    = '\0';
+
+    path_name_helper(prop->node, buff);
+    strcat(buff, "/");
+    simplify_and_strcat(buff, prop->name);
+
+    if (strcmp(buff, info->path) == 0) {
+        info->len   = prop->len;
+        info->value = prop->value;
+    }
+    return;
+}
+
+int get_prop_u32(uintptr_t fdt, const char *path, uint32_t *value)
+{
+    char buff[MAX_PATH_SIZE];
+    struct fdt_get_prop_info info;
+    info.path  = path;
+    info.buff  = buff;
+    info.value = NULL;
+    info.len   = 0;
+    struct fdt_cb cb;
+    memset(&cb, 0, sizeof(cb));
+
+    cb.open  = fdt_get_prop_dummy;
+    cb.prop  = fdt_get_prop_prop;
+    cb.done  = fdt_get_prop_dummy;
+    cb.close = fdt_get_prop_close;
+    cb.extra = &info;
+
+    fdt_scan(fdt, &cb);
+
+    if (info.len == 0) {
+        return -1;
+    }
+    *value = bswap(info.value[0]);
+    return 0;
+}
+
+void query_oscourse_info(uintptr_t dtb)
+{
+    if (get_prop_u32(dtb, "/cpus/cpu/timebase-frequency", &oscourse_info.time_base) != 0) {
+        printm("bbl fdt.c: read timebase error!\n\r");
+    }
+    printm("timebase = %d\n\r", oscourse_info.time_base);
+}
+////////////////////////////////////////// GET PROP DONE ////////////////////////////////////////////
 
 static inline int isstring(char c)
 {
