@@ -10,4 +10,3 @@ autom4te.cache/
 *.swp
 *~
 .vscode/
-test_payload/test_payload

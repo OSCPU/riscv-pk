@@ -2,6 +2,7 @@ NAME = test_payload
 ELF = $(NAME)
 HOST ?= riscv64-unknown-elf
 CC = $(HOST)-gcc
+OBJDUMP = $(HOST)-objdump
 
 
 HDRS = $(shell find -L ./include/ -name "*.h") \
@@ -16,13 +17,14 @@ INCLUDE_FLAG = \
   -Iinclude \
   -I../machine \
 
-CFLAGS = -O0 -nostdlib -T $(LDSCRIPT) -Wall -mcmodel=medany $(INCLUDE_FLAG) -nostdinc -g -fvar-tracking
+CFLAGS = -O0 -fno-builtin -nostdlib -T $(LDSCRIPT) -Wall -mcmodel=medany $(INCLUDE_FLAG) -nostdinc -g -fvar-tracking
 
 
 default: $(ELF)
 
 $(ELF): $(ASM_SRCS) $(C_SRCS) $(HDRS) $(LDSCRIPT)
 	$(CC) $(CFLAGS) -o $@ $(ASM_SRCS) $(C_SRCS)
+	$(OBJDUMP) -d $(ELF) > $(NAME).txt
 
 clean:
 	rm -f $(ELF)

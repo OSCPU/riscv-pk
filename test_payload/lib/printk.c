@@ -1,6 +1,11 @@
 #include "mcall.h"
-#include "sbi.h"
+#include "arch/sbi.h"
 #include "karg.h"
+
+void port_write_ch(char ch)
+{
+    sbi_console_putchar((int)ch);
+}
 
 void port_write(char *str)
 {

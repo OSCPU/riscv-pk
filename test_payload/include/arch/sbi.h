@@ -22,4 +22,18 @@ static inline void sbi_console_putstr(char *str)
     }
 }
 
+static inline void sbi_console_putchar(int ch)
+{
+    SBI_CALL_1(SBI_CONSOLE_PUTCHAR, ch);
+}
+
+static inline void sbi_set_timer(uint64_t stime_value)
+{
+#if __riscv_xlen == 32
+    SBI_CALL_2(SBI_SET_TIMER, stime_value, stime_value >> 32);
+#else
+    SBI_CALL_1(SBI_SET_TIMER, stime_value);
+#endif
+}
+
 #endif
