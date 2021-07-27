@@ -1,6 +1,8 @@
 #include "mcall.h"
 #include "arch/sbi.h"
 #include "karg.h"
+#include <arch/common.h>
+#include <drivers/screen.h>
 
 void port_write_ch(char ch)
 {
@@ -11,6 +13,9 @@ void port_write(char *str)
 {
     sbi_console_putstr(str);
 }
+
+#include <os/sched.h>
+#include <os/irq.h>
 
 static unsigned int mini_strlen(const char *s)
 {
@@ -183,8 +188,7 @@ end:
     return b.pbuffer - b.buffer;
 }
 
-static int _vprint(const char* fmt, va_list _va,
-                   void (*output)(char*))
+int vprintk(const char *fmt, va_list _va)
 {
     va_list va;
     va_copy(va, _va);
@@ -196,14 +200,22 @@ static int _vprint(const char* fmt, va_list _va,
 
     buff[ret] = '\0';
 
-    output(buff);
+    disable_preempt();
+    port_write(buff);
+    /*
+    for (int i = 0; i < ret; ++i) {
+        if (buff[i] == '\n') {
+            current_running->cursor_y++;
+        } else if (buff[i] == '\r') {
+            current_running->cursor_x = 1;
+        } else {
+            current_running->cursor_x++;
+        }
+    }
+    */
+    enable_preempt();
 
     return ret;
-}
-
-int vprintk(const char *fmt, va_list _va)
-{
-    return _vprint(fmt, _va, port_write);
 }
 
 int printk(const char *fmt, ...)

@@ -59,8 +59,14 @@ typedef enum {
     TASK_BLOCKED,
     TASK_RUNNING,
     TASK_READY,
+    TASK_ZOMBIE,
     TASK_EXITED,
 } task_status_t;
+
+typedef enum {
+    ENTER_ZOMBIE_ON_EXIT,
+    AUTO_CLEANUP_ON_EXIT,
+} spawn_mode_t;
 
 typedef enum {
     KERNEL_PROCESS,
@@ -81,8 +87,12 @@ typedef struct pcb
     // enable_preempt enables CSR_SIE only when preempt_count == 0
     reg_t preempt_count;
 
+    ptr_t kernel_stack_base;
+    ptr_t user_stack_base;
+
     /* previous, next pointer */
     list_node_t list;
+    list_node_t wait_list;
 
     /* process id */
     pid_t pid;
@@ -92,6 +102,7 @@ typedef struct pcb
 
     /* BLOCK | READY | RUNNING */
     task_status_t status;
+    spawn_mode_t mode;
 
     /* cursor position */
     int cursor_x;
@@ -119,6 +130,9 @@ extern const ptr_t pid0_stack;
 extern void switch_to(pcb_t *prev, pcb_t *next);
 void do_scheduler(void);
 void do_sleep(uint32_t);
+
+extern pid_t do_spawn(task_info_t *task, void* arg, spawn_mode_t mode);
+extern void do_exit(void);
 
 void do_block(list_node_t *, list_head *queue);
 void do_unblock(list_node_t *);

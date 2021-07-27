@@ -41,6 +41,7 @@
 extern ptr_t memCurr;
 
 extern ptr_t allocPage(int numPage);
+extern void freePage(ptr_t baseAddr, int numPage);
 extern void* kmalloc(size_t size);
 
 #endif /* MM_H */

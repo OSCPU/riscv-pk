@@ -1,8 +1,8 @@
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *  * * * * * * * * * * *
- *            Copyright (C) 2018 Institute of Computing Technology, CAS
- *               Author : Han Shukai (email : hanshukai@ict.ac.cn)
+ *            Copyright (C) 2019 Institute of Computing Technology, CAS
+ *               Author : Wang Luming (email : wangluming@ict.ac.cn)
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *  * * * * * * * * * * *
- *                       System call related processing
+ *                          simplified version of Linux's futex
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *  * * * * * * * * * * *
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -25,27 +25,34 @@
  *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *  * * * * * * * * * * */
 
-#ifndef OS_SYSCALL_NUMBER_H_
-#define OS_SYSCALL_NUMBER_H_
+#ifndef FUTEX_H
+#define FUTEX_H
 
-#define IGNORE 0
-#define NUM_SYSCALLS 64
+#include <os/list.h>
+#include <os/lock.h>
+#include <type.h>
 
-/* define */
-#define SYSCALL_SPAWN 0
-#define SYSCALL_EXIT 1
-#define SYSCALL_SLEEP 2
-#define SYSCALL_YIELD 7
+#define FUTEX_BUCKETS 100
 
-#define SYSCALL_FUTEX_WAIT 10
-#define SYSCALL_FUTEX_WAKEUP 11
+typedef uint64_t futex_key_t;
 
-#define SYSCALL_WRITE 20
-#define SYSCALL_READ 21
-#define SYSCALL_CURSOR 22
-#define SYSCALL_REFLUSH 23
+typedef struct futex_node
+{
+    futex_key_t futex_key;
+    list_node_t list;
+    list_head block_queue;
+}futex_node_t;
 
-#define SYSCALL_GET_TIMEBASE 30
-#define SYSCALL_GET_TICK 31
+typedef list_head futex_bucket_t;
 
-#endif
+extern futex_bucket_t futex_buckets[FUTEX_BUCKETS];
+
+extern void init_system_futex();
+/* Block if *val_addr == val else do nothing.
+ * wait until a futex_wakeup is called.
+ */
+extern void futex_wait(volatile uint64_t *val_addr, uint64_t val);
+/* Wake up at most `num_wakeup` threads. */
+extern void futex_wakeup(volatile uint64_t *val_addr, int num_wakeup);
+
+#endif /* FUTEX_H */

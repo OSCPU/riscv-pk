@@ -25,27 +25,26 @@
  *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *  * * * * * * * * * * */
 
-#ifndef OS_SYSCALL_NUMBER_H_
-#define OS_SYSCALL_NUMBER_H_
+#ifndef INCLUDE_SYSCALL_H_
+#define INCLUDE_SYSCALL_H_
 
-#define IGNORE 0
-#define NUM_SYSCALLS 64
+#include <os/syscall_number.h>
+#include <stdint.h>
 
-/* define */
-#define SYSCALL_SPAWN 0
-#define SYSCALL_EXIT 1
-#define SYSCALL_SLEEP 2
-#define SYSCALL_YIELD 7
+extern long invoke_syscall(long, long, long, long);
 
-#define SYSCALL_FUTEX_WAIT 10
-#define SYSCALL_FUTEX_WAKEUP 11
+void sys_exit(void);
+void sys_sleep(uint32_t);
+void sys_yield();
 
-#define SYSCALL_WRITE 20
-#define SYSCALL_READ 21
-#define SYSCALL_CURSOR 22
-#define SYSCALL_REFLUSH 23
+void sys_futex_wait(volatile uint64_t *val_addr, uint64_t val);
+void sys_futex_wakeup(volatile uint64_t *val_addr, int num_wakeup);
 
-#define SYSCALL_GET_TIMEBASE 30
-#define SYSCALL_GET_TICK 31
+void sys_write(char *);
+void sys_move_cursor(int, int);
+void sys_reflush();
+
+long sys_get_timebase();
+long sys_get_tick();
 
 #endif

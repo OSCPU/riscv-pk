@@ -5,7 +5,7 @@ CC = $(HOST)-gcc
 OBJDUMP = $(HOST)-objdump
 
 
-HDRS = $(shell find -L ./include/ -name "*.h") \
+HDRS = $(shell find -L ./ -name "*.h") \
   ../machine/mcall.h \
 
 C_SRCS = $(shell find -L ./ -name "*.c")
@@ -15,6 +15,8 @@ LDSCRIPT = $(NAME).lds
 
 INCLUDE_FLAG = \
   -Iinclude \
+  -Itest \
+  -Iulib/include \
   -I../machine \
 
 CFLAGS = -O0 -fno-builtin -nostdlib -T $(LDSCRIPT) -Wall -mcmodel=medany $(INCLUDE_FLAG) -nostdinc -g -fvar-tracking
@@ -27,6 +29,6 @@ $(ELF): $(ASM_SRCS) $(C_SRCS) $(HDRS) $(LDSCRIPT)
 	$(OBJDUMP) -d $(ELF) > $(NAME).txt
 
 clean:
-	rm -f $(ELF)
+	rm -f $(ELF) $(NAME).txt
 
 .PHONY: default clean

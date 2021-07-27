@@ -13,7 +13,7 @@ uintptr_t riscv_dtb;
 
 void reset_irq_timer()
 {
-    // TODO clock interrupt handler.
+    // clock interrupt handler.
     // scheduler, time counter in here to do, emmmmmm maybe.
     screen_reflush();
     timer_check();

@@ -34,13 +34,6 @@ static void vt100_clear()
     printk("%c[2J", 27);
 }
 
-/* hidden cursor */
-static void vt100_hidden_cursor()
-{
-    // \033[?25l
-    printk("%c[?25l", 27);
-}
-
 /* write a char */
 static void screen_write_ch(char ch)
 {
@@ -60,7 +53,7 @@ static void screen_write_ch(char ch)
 
 void init_screen(void)
 {
-    vt100_hidden_cursor();
+    // vt100_hidden_cursor();
     vt100_clear();
 }
 

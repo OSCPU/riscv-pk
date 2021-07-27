@@ -2,8 +2,6 @@
  *            Copyright (C) 2018 Institute of Computing Technology, CAS
  *               Author : Han Shukai (email : hanshukai@ict.ac.cn)
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *  * * * * * * * * * * *
- *                       System call related processing
- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *  * * * * * * * * * * *
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,27 +23,29 @@
  *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *  * * * * * * * * * * */
 
-#ifndef OS_SYSCALL_NUMBER_H_
-#define OS_SYSCALL_NUMBER_H_
+#ifndef INCLUDE_TEST_H_
+#define INCLUDE_TEST_H_
 
-#define IGNORE 0
-#define NUM_SYSCALLS 64
+//#include <p2/test2.h>
+#include <os/sched.h>
+#include "dasics/test_dasics.h"
 
-/* define */
-#define SYSCALL_SPAWN 0
-#define SYSCALL_EXIT 1
-#define SYSCALL_SLEEP 2
-#define SYSCALL_YIELD 7
+extern struct task_info dasics_task;
 
-#define SYSCALL_FUTEX_WAIT 10
-#define SYSCALL_FUTEX_WAKEUP 11
+/*
+extern struct task_info *sched1_tasks[16];
+extern int num_sched1_tasks;
 
-#define SYSCALL_WRITE 20
-#define SYSCALL_READ 21
-#define SYSCALL_CURSOR 22
-#define SYSCALL_REFLUSH 23
+extern struct task_info *lock_tasks[16];
+extern int num_lock_tasks;
 
-#define SYSCALL_GET_TIMEBASE 30
-#define SYSCALL_GET_TICK 31
+extern struct task_info *timer_tasks[16];
+extern int num_timer_tasks;
 
+extern struct task_info *sched2_tasks[16];
+extern int num_sched2_tasks;
+
+extern struct task_info *lock2_tasks[16];
+extern int num_lock_tasks;
+*/
 #endif
