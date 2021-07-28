@@ -3,7 +3,7 @@ ELF = $(NAME)
 HOST ?= riscv64-unknown-elf
 CC = $(HOST)-gcc
 OBJDUMP = $(HOST)-objdump
-
+DUMPNAME = dump
 
 HDRS = $(shell find -L ./ -name "*.h") \
   ../machine/mcall.h \
@@ -26,7 +26,7 @@ default: $(ELF)
 
 $(ELF): $(ASM_SRCS) $(C_SRCS) $(HDRS) $(LDSCRIPT)
 	$(CC) $(CFLAGS) -o $@ $(ASM_SRCS) $(C_SRCS)
-	$(OBJDUMP) -d $(ELF) > $(NAME).txt
+	$(OBJDUMP) -d $(ELF) > $(DUMPNAME).txt
 
 clean:
 	rm -f $(ELF) $(NAME).txt

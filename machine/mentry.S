@@ -29,6 +29,9 @@ trap_table:
   .dc.a __trap_from_machine_mode
   .dc.a bad_trap
   .dc.a bad_trap
+  .dc.a bad_trap  # 16, dasicsInstrAccessFault
+  .dc.a bad_trap  # 17, dasicsLoadAccessFault
+  .dc.a bad_trap  # 18, dasicsStoreAccessFault
 
   .option norvc
   .section .text.init,"ax",@progbits

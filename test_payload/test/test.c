@@ -1,6 +1,6 @@
 #include "test.h"
 
-struct task_info dasics_task = {(ptr_t)&dasics_example, USER_PROCESS};
+struct task_info dasics_task = {(ptr_t)&dasics_main, USER_PROCESS};
 
 /* [TASK1] [TASK3] task group to test do_scheduler() */
 // do_scheduler() annotations are required for non-robbed scheduling
