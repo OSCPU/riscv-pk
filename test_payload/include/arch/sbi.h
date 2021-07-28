@@ -4,6 +4,15 @@
 #include "mcall.h"
 #include "type.h"
 
+#define SBI_CALL_0(which)                                     \
+    ({                                                        \
+        register uintptr_t a7 asm("a7") = (uintptr_t)(which); \
+        asm volatile("ecall"                                  \
+                     :                                        \
+                     : "r"(a7)                                \
+                     : "memory");                             \
+    })
+
 #define SBI_CALL_1(which, arg0)                               \
     ({                                                        \
         register uintptr_t a0 asm("a0") = (uintptr_t)(arg0);  \
@@ -46,6 +55,11 @@ enum SBI_READY_FDT_TYPE {
 static inline uint32_t sbi_read_fdt(enum SBI_READY_FDT_TYPE type)
 {
     return SBI_CALL_1(SBI_READFDT, (int)type);
+}
+
+static inline void sbi_shutdown()
+{
+    SBI_CALL_0(SBI_SHUTDOWN);
 }
 
 #endif

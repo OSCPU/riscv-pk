@@ -29,6 +29,6 @@ $(ELF): $(ASM_SRCS) $(C_SRCS) $(HDRS) $(LDSCRIPT)
 	$(OBJDUMP) -d $(ELF) > $(DUMPNAME).txt
 
 clean:
-	rm -f $(ELF) $(NAME).txt
+	rm -f $(ELF) $(DUMPNAME).txt
 
 .PHONY: default clean

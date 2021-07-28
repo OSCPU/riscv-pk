@@ -57,6 +57,7 @@ void init_exception()
 
 void handle_other(regs_context_t *regs, uint64_t stval, uint64_t cause)
 {
+    printk("[HANDLE_OTHER]: \n");
     static char* reg_name[] = {
         "zero "," ra  "," sp  "," gp  "," tp  ",
         " t0  "," t1  "," t2  ","s0/fp"," s1  ",
@@ -75,5 +76,5 @@ void handle_other(regs_context_t *regs, uint64_t stval, uint64_t cause)
     printk("sstatus: 0x%lx sbadaddr: 0x%lx scause: %lu\n\r",
            regs->sstatus, regs->sbadaddr, regs->scause);
     printk("sepc: 0x%lx\n\r", regs->sepc);
-    assert(0);
+    sbi_shutdown();
 }
