@@ -71,11 +71,11 @@ int main()
     // init DASICS mechanism
     write_csr(0x881, 0xffffffff);  // DasicsLibCfg0, should be cleared after the following steps
     
-    write_csr(0x5c0, 0x3);  // DasicsGlobalCfg
-    write_csr(0x5c1, 0x80202812);  // DasicsMainBound0
+    write_csr(0x5c0, 0x3UL);  // DasicsGlobalCfg
+    write_csr(0x5c1, (ptr_t)&dasics_dummy);  // DasicsMainBound0
     write_csr(0x5c2, (ptr_t)&dasics_main);  // DasicsMainBound1
 
-    write_csr(0x880, 0x1);  // DasicsMainCfg
+    write_csr(0x880, 0x1UL);  // DasicsMainCfg
 
     printk("> [INIT]: DasicsMainBound1: 0x%lx.\n\r", read_csr(0x5c2));  // it should not be reset !!
     printk("> [INIT]: DasicsLibCfg1: 0x%lx.\n\r", read_csr(0x881));
