@@ -79,14 +79,25 @@ static void delegate_traps()
     (1U << CAUSE_LOAD_PAGE_FAULT) |
     (1U << CAUSE_STORE_PAGE_FAULT) |
     (1U << CAUSE_USER_ECALL) |
-    (1U << CAUSE_DASICS_FETCH_ACCESS) |
-    (1U << CAUSE_DASICS_LOAD_ACCESS) |
-    (1U << CAUSE_DASICS_STORE_ACCESS);
+    (1U << CAUSE_DASICS_MODEU_FETCH_ACCESS) |
+    (1U << CAUSE_DASICS_MODEU_LOAD_ACCESS) |
+    (1U << CAUSE_DASICS_MODEU_STORE_ACCESS);
 
   write_csr(mideleg, interrupts);
   write_csr(medeleg, exceptions);
   assert(read_csr(mideleg) == interrupts);
   assert(read_csr(medeleg) == exceptions);
+
+  if (!supports_extension('N'))
+    return;
+
+  uintptr_t sdeleg_exceptions =
+    (1U << CAUSE_DASICS_MODEU_FETCH_ACCESS) |
+    (1U << CAUSE_DASICS_MODEU_LOAD_ACCESS) |
+    (1U << CAUSE_DASICS_MODEU_STORE_ACCESS);
+
+  write_csr(sedeleg, sdeleg_exceptions);
+  assert(read_csr(sedeleg) == sdeleg_exceptions);
 }
 
 static void fp_init()
