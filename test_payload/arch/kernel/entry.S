@@ -71,14 +71,223 @@ _save_context:
   sd s3,   OFFSET_REG_SBADADDR(sp)
   sd s4,   OFFSET_REG_SCAUSE(sp)
   sd s5,   OFFSET_REG_TP(sp)
+
+  /* Save N Extension CSRs */
+  csrr s0, CSR_USTATUS
+  sd   s0, OFFSET_REG_USTATUS(sp)
+  csrr s0, CSR_UEPC
+  sd   s0, OFFSET_REG_UEPC(sp)
+  csrr s0, CSR_UTVAL
+  sd   s0, OFFSET_REG_UBADADDR(sp)
+  csrr s0, CSR_UCAUSE
+  sd   s0, OFFSET_REG_UCAUSE(sp)
+  csrr s0, CSR_UTVEC
+  sd   s0, OFFSET_REG_UTVEC(sp)
+  csrr s0, CSR_UIE
+  sd   s0, OFFSET_REG_UIE(sp)
+  csrr s0, CSR_UIP
+  sd   s0, OFFSET_REG_UIP(sp)
+  csrr s0, CSR_USCRATCH
+  sd   s0, OFFSET_REG_USCRATCH(sp)
+
+  /* Save DASICS context */
+  csrr s0, CSR_DUMCFG
+  sd   s0, OFFSET_REG_DUMCFG(sp)
+  csrr s0, CSR_DUMBOUNDHI
+  sd   s0, OFFSET_REG_DUMBOUNDHI(sp)
+  csrr s0, CSR_DUMBOUNDLO
+  sd   s0, OFFSET_REG_DUMBOUNDLO(sp)
+
+  csrr s0, CSR_DLCFG0
+  sd   s0, OFFSET_REG_DLCFG0(sp)
+  csrr s0, CSR_DLCFG1
+  sd   s0, OFFSET_REG_DLCFG1(sp)
+
+  csrr s0, CSR_DLBOUND0
+  sd   s0, OFFSET_REG_DLBOUND0(sp)
+  csrr s0, CSR_DLBOUND1
+  sd   s0, OFFSET_REG_DLBOUND1(sp)
+  csrr s0, CSR_DLBOUND2
+  sd   s0, OFFSET_REG_DLBOUND2(sp)
+  csrr s0, CSR_DLBOUND3
+  sd   s0, OFFSET_REG_DLBOUND3(sp)
+  csrr s0, CSR_DLBOUND4
+  sd   s0, OFFSET_REG_DLBOUND4(sp)
+  csrr s0, CSR_DLBOUND5
+  sd   s0, OFFSET_REG_DLBOUND5(sp)
+  csrr s0, CSR_DLBOUND6
+  sd   s0, OFFSET_REG_DLBOUND6(sp)
+  csrr s0, CSR_DLBOUND7
+  sd   s0, OFFSET_REG_DLBOUND7(sp)
+  csrr s0, CSR_DLBOUND8
+  sd   s0, OFFSET_REG_DLBOUND8(sp)
+  csrr s0, CSR_DLBOUND9
+  sd   s0, OFFSET_REG_DLBOUND9(sp)
+  csrr s0, CSR_DLBOUND10
+  sd   s0, OFFSET_REG_DLBOUND10(sp)
+  csrr s0, CSR_DLBOUND11
+  sd   s0, OFFSET_REG_DLBOUND11(sp)
+  csrr s0, CSR_DLBOUND12
+  sd   s0, OFFSET_REG_DLBOUND12(sp)
+  csrr s0, CSR_DLBOUND13
+  sd   s0, OFFSET_REG_DLBOUND13(sp)
+  csrr s0, CSR_DLBOUND14
+  sd   s0, OFFSET_REG_DLBOUND14(sp)
+  csrr s0, CSR_DLBOUND15
+  sd   s0, OFFSET_REG_DLBOUND15(sp)
+  csrr s0, CSR_DLBOUND16
+  sd   s0, OFFSET_REG_DLBOUND16(sp)
+  csrr s0, CSR_DLBOUND17
+  sd   s0, OFFSET_REG_DLBOUND17(sp)
+  csrr s0, CSR_DLBOUND18
+  sd   s0, OFFSET_REG_DLBOUND18(sp)
+  csrr s0, CSR_DLBOUND19
+  sd   s0, OFFSET_REG_DLBOUND19(sp)
+  csrr s0, CSR_DLBOUND20
+  sd   s0, OFFSET_REG_DLBOUND20(sp)
+  csrr s0, CSR_DLBOUND21
+  sd   s0, OFFSET_REG_DLBOUND21(sp)
+  csrr s0, CSR_DLBOUND22
+  sd   s0, OFFSET_REG_DLBOUND22(sp)
+  csrr s0, CSR_DLBOUND23
+  sd   s0, OFFSET_REG_DLBOUND23(sp)
+  csrr s0, CSR_DLBOUND24
+  sd   s0, OFFSET_REG_DLBOUND24(sp)
+  csrr s0, CSR_DLBOUND25
+  sd   s0, OFFSET_REG_DLBOUND25(sp)
+  csrr s0, CSR_DLBOUND26
+  sd   s0, OFFSET_REG_DLBOUND26(sp)
+  csrr s0, CSR_DLBOUND27
+  sd   s0, OFFSET_REG_DLBOUND27(sp)
+  csrr s0, CSR_DLBOUND28
+  sd   s0, OFFSET_REG_DLBOUND28(sp)
+  csrr s0, CSR_DLBOUND29
+  sd   s0, OFFSET_REG_DLBOUND29(sp)
+  csrr s0, CSR_DLBOUND30
+  sd   s0, OFFSET_REG_DLBOUND30(sp)
+  csrr s0, CSR_DLBOUND31
+  sd   s0, OFFSET_REG_DLBOUND31(sp)
+
+  csrr s0, CSR_DMAINCALL
+  sd   s0, OFFSET_REG_DMAINCALL(sp)
+  csrr s0, CSR_DRETURNPC
+  sd   s0, OFFSET_REG_DRETURNPC(sp)
+  csrr s0, CSR_DFZRETURN
+  sd   s0, OFFSET_REG_DFZRETURN(sp)
 .endm
 
 .macro RESTORE_CONTEXT
+  /* Restore Sstatus and Sepc */
   ld a0, OFFSET_REG_SSTATUS(sp)
   ld a2, OFFSET_REG_SEPC(sp)
   csrw CSR_SSTATUS, a0
   csrw CSR_SEPC, a2
 
+  /* Restore N Extension CSRs */
+  ld   s0, OFFSET_REG_USTATUS(sp)
+  csrw CSR_USTATUS, s0
+  ld   s0, OFFSET_REG_UEPC(sp)
+  csrw CSR_UEPC, s0
+  ld   s0, OFFSET_REG_UBADADDR(sp)
+  csrw CSR_UTVAL, s0
+  ld   s0, OFFSET_REG_UCAUSE(sp)
+  csrw CSR_UCAUSE, s0
+  ld   s0, OFFSET_REG_UTVEC(sp)
+  csrw CSR_UTVEC, s0
+  ld   s0, OFFSET_REG_UIE(sp)
+  csrw CSR_UIE, s0
+  ld   s0, OFFSET_REG_UIP(sp)
+  csrw CSR_UIP, s0
+  ld   s0, OFFSET_REG_USCRATCH(sp)
+  csrw CSR_USCRATCH, s0
+
+  /* Restore DASICS context */
+  ld   s0, OFFSET_REG_DUMCFG(sp)
+  ori  s0, s0, 0x1
+  csrw CSR_DUMCFG, s0
+  ld   s0, OFFSET_REG_DUMBOUNDHI(sp)
+  csrw CSR_DUMBOUNDHI, s0
+  ld   s0, OFFSET_REG_DUMBOUNDLO(sp)
+  csrw CSR_DUMBOUNDLO, s0
+
+  ld   s0, OFFSET_REG_DLCFG0(sp)
+  csrw CSR_DLCFG0, s0
+  ld   s0, OFFSET_REG_DLCFG1(sp)
+  csrw CSR_DLCFG1, s0
+
+  ld   s0, OFFSET_REG_DLBOUND0(sp)
+  csrw CSR_DLBOUND0, s0
+  ld   s0, OFFSET_REG_DLBOUND1(sp)
+  csrw CSR_DLBOUND1, s0
+  ld   s0, OFFSET_REG_DLBOUND2(sp)
+  csrw CSR_DLBOUND2, s0
+  ld   s0, OFFSET_REG_DLBOUND3(sp)
+  csrw CSR_DLBOUND3, s0
+  ld   s0, OFFSET_REG_DLBOUND4(sp)
+  csrw CSR_DLBOUND4, s0
+  ld   s0, OFFSET_REG_DLBOUND5(sp)
+  csrw CSR_DLBOUND5, s0
+  ld   s0, OFFSET_REG_DLBOUND6(sp)
+  csrw CSR_DLBOUND6, s0
+  ld   s0, OFFSET_REG_DLBOUND7(sp)
+  csrw CSR_DLBOUND7, s0
+  ld   s0, OFFSET_REG_DLBOUND8(sp)
+  csrw CSR_DLBOUND8, s0
+  ld   s0, OFFSET_REG_DLBOUND9(sp)
+  csrw CSR_DLBOUND9, s0
+  ld   s0, OFFSET_REG_DLBOUND10(sp)
+  csrw CSR_DLBOUND10, s0
+  ld   s0, OFFSET_REG_DLBOUND11(sp)
+  csrw CSR_DLBOUND11, s0
+  ld   s0, OFFSET_REG_DLBOUND12(sp)
+  csrw CSR_DLBOUND12, s0
+  ld   s0, OFFSET_REG_DLBOUND13(sp)
+  csrw CSR_DLBOUND13, s0
+  ld   s0, OFFSET_REG_DLBOUND14(sp)
+  csrw CSR_DLBOUND14, s0
+  ld   s0, OFFSET_REG_DLBOUND15(sp)
+  csrw CSR_DLBOUND15, s0
+  ld   s0, OFFSET_REG_DLBOUND16(sp)
+  csrw CSR_DLBOUND16, s0
+  ld   s0, OFFSET_REG_DLBOUND17(sp)
+  csrw CSR_DLBOUND17, s0
+  ld   s0, OFFSET_REG_DLBOUND18(sp)
+  csrw CSR_DLBOUND18, s0
+  ld   s0, OFFSET_REG_DLBOUND19(sp)
+  csrw CSR_DLBOUND19, s0
+  ld   s0, OFFSET_REG_DLBOUND20(sp)
+  csrw CSR_DLBOUND20, s0
+  ld   s0, OFFSET_REG_DLBOUND21(sp)
+  csrw CSR_DLBOUND21, s0
+  ld   s0, OFFSET_REG_DLBOUND22(sp)
+  csrw CSR_DLBOUND22, s0
+  ld   s0, OFFSET_REG_DLBOUND23(sp)
+  csrw CSR_DLBOUND23, s0
+  ld   s0, OFFSET_REG_DLBOUND24(sp)
+  csrw CSR_DLBOUND24, s0
+  ld   s0, OFFSET_REG_DLBOUND25(sp)
+  csrw CSR_DLBOUND25, s0
+  ld   s0, OFFSET_REG_DLBOUND26(sp)
+  csrw CSR_DLBOUND26, s0
+  ld   s0, OFFSET_REG_DLBOUND27(sp)
+  csrw CSR_DLBOUND27, s0
+  ld   s0, OFFSET_REG_DLBOUND28(sp)
+  csrw CSR_DLBOUND28, s0
+  ld   s0, OFFSET_REG_DLBOUND29(sp)
+  csrw CSR_DLBOUND29, s0
+  ld   s0, OFFSET_REG_DLBOUND30(sp)
+  csrw CSR_DLBOUND30, s0
+  ld   s0, OFFSET_REG_DLBOUND31(sp)
+  csrw CSR_DLBOUND31, s0
+
+  ld   s0, OFFSET_REG_DMAINCALL(sp)
+  csrw CSR_DMAINCALL, s0
+  ld   s0, OFFSET_REG_DRETURNPC(sp)
+  csrw CSR_DRETURNPC, s0
+  ld   s0, OFFSET_REG_DFZRETURN(sp)
+  csrw CSR_DFZRETURN, s0
+
+  /* Restore general registers */
   ld x1,  OFFSET_REG_RA(sp)
   ld x3,  OFFSET_REG_GP(sp)
   ld x4,  OFFSET_REG_TP(sp)
@@ -200,7 +409,6 @@ ENTRY(ret_from_exception)
   sd t0, PCB_KERNEL_SP(tp)
   csrw CSR_SSCRATCH, tp
 
-
 restore:
   RESTORE_CONTEXT
   sret
@@ -210,6 +418,41 @@ ENTRY(exception_handler_entry)
   SAVE_CONTEXT
 
   csrw CSR_SSCRATCH, x0
+
+  /* Set DASICS configuration for S-Mode */
+  csrr t0, CSR_DUMCFG
+  ori  t0, t0, 0x1
+  csrw CSR_DUMCFG, t0
+
+  li   t0, 0x0b0b0c0aUL
+  csrw CSR_DLCFG0, t0
+  csrw CSR_DLCFG1, x0
+
+  la   t0, __RODATA_END__
+  la   t1, __RODATA_BEGIN__
+  csrw CSR_DLBOUND0, t0
+  csrw CSR_DLBOUND1, t1
+
+  la   t0, __SFREEZONE_TEXT_END__
+  la   t1, __SFREEZONE_TEXT_BEGIN__
+  addi t0, t0, -2
+  csrw CSR_DLBOUND2, t0
+  csrw CSR_DLBOUND3, t1
+
+  la   t0, __SFREEZONE_DATA_END__
+  la   t1, __SFREEZONE_DATA_BEGIN__
+  csrw CSR_DLBOUND4, t0
+  csrw CSR_DLBOUND5, t1
+
+  ld   t0, PCB_USER_STACK_BASE(tp)    // FIXME: if kmalloc is called ?
+  ld   t1, PCB_KERNEL_STACK_BASE(tp)
+  li   t2, 4096  // PAGE_SIZE
+  add  t0, t0, t2
+  csrw CSR_DLBOUND6, t0
+  csrw CSR_DLBOUND7, t1
+
+  la   t0, dasics_smaincall
+  csrw CSR_DMAINCALL, t0
 
   /* Load the global pointer */
   .option push

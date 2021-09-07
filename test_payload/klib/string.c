@@ -1,6 +1,6 @@
 #include <os/string.h>
 
-int kstrlen(const char *src)
+int ATTR_SFREEZONE_TEXT kstrlen(const char *src)
 {
     int i;
     for (i = 0; src[i] != '\0'; i++) {
@@ -8,14 +8,14 @@ int kstrlen(const char *src)
     return i;
 }
 
-void kmemcpy(uint8_t *dest, const uint8_t *src, uint32_t len)
+void ATTR_SFREEZONE_TEXT kmemcpy(uint8_t *dest, const uint8_t *src, uint32_t len)
 {
     for (; len != 0; len--) {
         *dest++ = *src++;
     }
 }
 
-void kmemset(void *dest, uint8_t val, uint32_t len)
+void ATTR_SFREEZONE_TEXT kmemset(void *dest, uint8_t val, uint32_t len)
 {
     uint8_t *dst = (uint8_t *)dest;
 
@@ -24,9 +24,9 @@ void kmemset(void *dest, uint8_t val, uint32_t len)
     }
 }
 
-void kbzero(void *dest, uint32_t len) { kmemset(dest, 0, len); }
+void ATTR_SFREEZONE_TEXT kbzero(void *dest, uint32_t len) { kmemset(dest, 0, len); }
 
-int kstrcmp(const char *str1, const char *str2)
+int ATTR_SFREEZONE_TEXT kstrcmp(const char *str1, const char *str2)
 {
     while (*str1 && *str2) {
         if (*str1 != *str2) {
@@ -38,7 +38,7 @@ int kstrcmp(const char *str1, const char *str2)
     return (*str1) - (*str2);
 }
 
-char *kstrcpy(char *dest, const char *src)
+char *ATTR_SFREEZONE_TEXT kstrcpy(char *dest, const char *src)
 {
     char *tmp = dest;
 
@@ -51,7 +51,7 @@ char *kstrcpy(char *dest, const char *src)
     return tmp;
 }
 
-char *kstrcat(char *dest, const char *src)
+char *ATTR_SFREEZONE_TEXT kstrcat(char *dest, const char *src)
 {
     char *tmp = dest;
 

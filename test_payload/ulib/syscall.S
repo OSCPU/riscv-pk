@@ -1,5 +1,6 @@
 #include <arch/asm.h>
 
+.section ".umaintext","ax"
 ENTRY(invoke_syscall)
   mv a7,a0
   mv a0,a1

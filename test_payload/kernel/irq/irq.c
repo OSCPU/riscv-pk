@@ -52,7 +52,35 @@ void init_exception()
     }
     irq_table[IRQC_S_TIMER] = handle_int;
     exc_table[EXCC_SYSCALL] = handle_syscall;
+    exc_table[EXCC_DASICS_SINST_ACCESS] = handle_dasics;
+    exc_table[EXCC_DASICS_SLOAD_ACCESS] = handle_dasics;
+    exc_table[EXCC_DASICS_SSTORE_ACCESS] = handle_dasics;
     setup_exception();
+}
+
+void handle_dasics(regs_context_t *regs, uint64_t stval, uint64_t cause)
+{
+    switch (cause)
+    {
+        case EXCC_DASICS_SINST_ACCESS:
+            printk("[HANDLE_DASICS]: Detect SInst Access Fault! Skip this instruction!\n");
+            break;
+        case EXCC_DASICS_SLOAD_ACCESS:
+            printk("[HANDLE_DASICS]: Detect SLoad Access Fault! Skip this instruction!\n");
+            break;
+        case EXCC_DASICS_SSTORE_ACCESS:
+            printk("[HANDLE_DASICS]: Detect SStore Access Fault! Skip this instruction!\n");
+            break;
+        default:
+            printk("[HANDLE_DASICS]: Invalid cause 0x%lx detected!\n");
+            printk("sstatus: 0x%lx sbadaddr: 0x%lx scause: %lu\n\r",
+                regs->sstatus, regs->sbadaddr, regs->scause);
+            printk("sepc: 0x%lx\n\r", regs->sepc);
+            sbi_shutdown();
+            break;
+    }
+
+    regs->sepc += 4;
 }
 
 void handle_other(regs_context_t *regs, uint64_t stval, uint64_t cause)

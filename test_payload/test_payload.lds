@@ -15,13 +15,32 @@ SECTIONS
     *(.text.startup .text.startup.*)
     *(.text.hot .text.hot.*)
     *(.text .stub .text.* .gnu.linkonce.t.*)
+    /* DASICS main text sections */
+    *(.smaintext)
+    __UMAIN_TEXT_BEGIN__ = .;
+    *(.umaintext)
+    __UMAIN_TEXT_END__ = .;
     /* .gnu.warning sections are handled specially by elf32.em.  */
     *(.gnu.warning)
   }
   PROVIDE (__etext = .);
   PROVIDE (_etext = .);
   PROVIDE (etext = .);
+  /* DASICS lib and freezone text section */
+  .libtext        :
+  {
+    *(.slibtext)
+    __SFREEZONE_TEXT_BEGIN__ = .;
+    *(.sfreezonetext)
+    __SFREEZONE_TEXT_END__ = .;
+    *(.ulibtext)
+    __UFREEZONE_TEXT_BEGIN__ = .;
+    *(.ufreezonetext)
+    __UFREEZONE_TEXT_END__ = .;
+  }
+  __RODATA_BEGIN__ = .;
   .rodata         : { *(.rodata .rodata.* .gnu.linkonce.r.*) }
+  __RODATA_END__ = .;
   .rodata1        : { *(.rodata1) }
   .sdata2         :
   {
@@ -102,6 +121,8 @@ SECTIONS
   {
     __DATA_BEGIN__ = .;
     *(.data .data.* .gnu.linkonce.d.*)
+    /* DASICS main data sections */
+    *(.smaindata .umaindata)
     SORT(CONSTRUCTORS)
   }
   .data1          : { *(.data1) }
@@ -142,6 +163,16 @@ SECTIONS
   __BSS_END__ = .;
     __global_pointer$ = MIN(__SDATA_BEGIN__ + 0x800,
                             MAX(__DATA_BEGIN__ + 0x800, __BSS_END__ - 0x800));
+  /* DASICS lib and freezone data section */
+  .libdata        :
+  {
+    *(.slibdata)
+    __SFREEZONE_DATA_BEGIN__ = .;
+    *(.sfreezonedata)
+    __SFREEZONE_DATA_END__ = .;
+    *(.ulibdata)
+    *(.ufreezonedata)
+  }
   _end = .; PROVIDE (end = .);
   /* Stabs debugging sections.  */
   .stab          0 : { *(.stab) }

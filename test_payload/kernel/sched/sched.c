@@ -4,10 +4,12 @@
 #include <os/sched.h>
 #include <os/time.h>
 #include <os/irq.h>
+#include <os/string.h>
 #include <drivers/screen.h>
 #include <kio.h>
 #include <kassert.h>
 #include "arch/csr.h"
+#include <kdasics.h>
 
 extern void ret_from_exception();
 extern void __global_pointer$();
@@ -120,6 +122,30 @@ static void init_pcb_stack(
     } else {
         pt_regs->sstatus |= SR_SPIE;
     }
+
+    // set DASICS registers for user program
+    extern char __UMAIN_TEXT_BEGIN__, __UMAIN_TEXT_END__;
+    pt_regs->dasicsUMainCfg         = 0x3UL;
+    pt_regs->dasicsUMainBoundHi     = (ptr_t)&__UMAIN_TEXT_END__ - 0x2UL;  // point to previous instr
+    pt_regs->dasicsUMainBoundLo     = (ptr_t)&__UMAIN_TEXT_BEGIN__;
+
+    extern char __RODATA_BEGIN__, __RODATA_END__;
+    extern char __UFREEZONE_TEXT_BEGIN__, __UFREEZONE_TEXT_END__;
+    pt_regs->dasicsLibCfg0          = 0x0c0a0bUL;
+    pt_regs->dasicsLibCfg1          = 0;
+    pt_regs->dasicsLibBounds[0]     = user_stack;
+    pt_regs->dasicsLibBounds[1]     = kernel_stack - PAGE_SIZE;
+    pt_regs->dasicsLibBounds[2]     = (ptr_t)&__RODATA_END__;
+    pt_regs->dasicsLibBounds[3]     = (ptr_t)&__RODATA_BEGIN__;
+    pt_regs->dasicsLibBounds[4]     = (ptr_t)&__UFREEZONE_TEXT_END__ - 0x2UL;
+    pt_regs->dasicsLibBounds[5]     = (ptr_t)&__UFREEZONE_TEXT_BEGIN__;
+
+    int cfgidx = dasics_libcfg_kalloc(DASICS_LIBCFG_V | DASICS_LIBCFG_R | DASICS_LIBCFG_W,
+        user_stack, kernel_stack - PAGE_SIZE);  // Allow kbzero lib function to access this memory space
+    assert(cfgidx >= 0);
+    kbzero(&pt_regs->dasicsLibBounds[6], 29 * sizeof(reg_t));
+    dasics_libcfg_kfree(cfgidx);
+
     // set sp to simulate return from switch_to
     ptr_t new_ksp = kernel_stack - sizeof(regs_context_t) -
                     sizeof(switchto_context_t);

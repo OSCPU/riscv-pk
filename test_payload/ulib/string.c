@@ -1,6 +1,6 @@
 #include "string.h"
 
-int strlen(const char *src)
+int ATTR_UFREEZONE_TEXT strlen(const char *src)
 {
     int i;
     for (i = 0; src[i] != '\0'; i++) {
@@ -8,14 +8,14 @@ int strlen(const char *src)
     return i;
 }
 
-void memcpy(uint8_t *dest, const uint8_t *src, uint32_t len)
+void ATTR_UFREEZONE_TEXT memcpy(uint8_t *dest, const uint8_t *src, uint32_t len)
 {
     for (; len != 0; len--) {
         *dest++ = *src++;
     }
 }
 
-void memset(void *dest, uint8_t val, uint32_t len)
+void ATTR_UFREEZONE_TEXT memset(void *dest, uint8_t val, uint32_t len)
 {
     uint8_t *dst = (uint8_t *)dest;
 
@@ -24,9 +24,9 @@ void memset(void *dest, uint8_t val, uint32_t len)
     }
 }
 
-void bzero(void *dest, uint32_t len) { memset(dest, 0, len); }
+void ATTR_UFREEZONE_TEXT bzero(void *dest, uint32_t len) { memset(dest, 0, len); }
 
-int strcmp(const char *str1, const char *str2)
+int ATTR_UFREEZONE_TEXT strcmp(const char *str1, const char *str2)
 {
     while (*str1 && *str2) {
         if (*str1 != *str2) {
@@ -39,7 +39,7 @@ int strcmp(const char *str1, const char *str2)
 }
 
 
-char *strcpy(char *dest, const char *src)
+char *ATTR_UFREEZONE_TEXT strcpy(char *dest, const char *src)
 {
     char *tmp = dest;
 
@@ -52,7 +52,7 @@ char *strcpy(char *dest, const char *src)
     return tmp;
 }
 
-char *strcat(char *dest, const char *src)
+char *ATTR_UFREEZONE_TEXT strcat(char *dest, const char *src)
 {
     char *tmp = dest;
 

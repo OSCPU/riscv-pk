@@ -79,9 +79,9 @@ static void delegate_traps()
     (1U << CAUSE_LOAD_PAGE_FAULT) |
     (1U << CAUSE_STORE_PAGE_FAULT) |
     (1U << CAUSE_USER_ECALL) |
-    (1U << CAUSE_DASICS_MODEU_FETCH_ACCESS) |
-    (1U << CAUSE_DASICS_MODEU_LOAD_ACCESS) |
-    (1U << CAUSE_DASICS_MODEU_STORE_ACCESS);
+    (1U << CAUSE_DASICS_UFETCH_ACCESS) |
+    (1U << CAUSE_DASICS_ULOAD_ACCESS) |
+    (1U << CAUSE_DASICS_USTORE_ACCESS);
 
   write_csr(mideleg, interrupts);
   write_csr(medeleg, exceptions);
@@ -92,12 +92,32 @@ static void delegate_traps()
     return;
 
   uintptr_t sdeleg_exceptions =
-    (1U << CAUSE_DASICS_MODEU_FETCH_ACCESS) |
-    (1U << CAUSE_DASICS_MODEU_LOAD_ACCESS) |
-    (1U << CAUSE_DASICS_MODEU_STORE_ACCESS);
+    (1U << CAUSE_DASICS_UFETCH_ACCESS) |
+    (1U << CAUSE_DASICS_ULOAD_ACCESS) |
+    (1U << CAUSE_DASICS_USTORE_ACCESS);
 
   write_csr(sedeleg, sdeleg_exceptions);
   assert(read_csr(sedeleg) == sdeleg_exceptions);
+}
+
+static void dasics_init()
+{
+  #define DASICS_SCFG_GLB 2
+  #define DASICS_SCFG_ENA 1
+  #define DASICS_SCFG_CLS 0
+
+  write_csr(0xbc0, (1U << DASICS_SCFG_GLB) |
+                   (1U << DASICS_SCFG_ENA) |
+                   (1U << DASICS_SCFG_CLS) );  // DasicsSMainCfg
+
+  /**
+   * TODO: Currently we assume DASICS-smain-text lies in this fixed segment, which
+   * will be modified by smain calling sbi functions. It looks not perfect yet ...
+  */
+  #define DASICS_SMAIN_HI 0x80500000lu
+  #define DASICS_SMAIN_LO 0x80200000lu
+  write_csr(0xbc1, DASICS_SMAIN_HI);
+  write_csr(0xbc2, DASICS_SMAIN_LO);
 }
 
 static void fp_init()
@@ -140,7 +160,8 @@ static void memory_init()
 static void hart_init()
 {
   mstatus_init();
-  fp_init();
+  dasics_init();
+  //fp_init();
 #ifndef BBL_BOOT_MACHINE
   delegate_traps();
 #endif /* BBL_BOOT_MACHINE */

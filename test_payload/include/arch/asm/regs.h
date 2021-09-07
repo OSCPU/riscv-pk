@@ -87,12 +87,67 @@
 #define OFFSET_REG_SBADADDR     272
 #define OFFSET_REG_SCAUSE       280
 
+#define OFFSET_REG_USTATUS      288
+#define OFFSET_REG_UEPC         296
+#define OFFSET_REG_UBADADDR     304
+#define OFFSET_REG_UCAUSE       312
+#define OFFSET_REG_UTVEC        320
+#define OFFSET_REG_UIE          328
+#define OFFSET_REG_UIP          336
+#define OFFSET_REG_USCRATCH     344
+
+/* DASICS register */
+#define OFFSET_REG_DUMCFG       352
+#define OFFSET_REG_DUMBOUNDHI   360
+#define OFFSET_REG_DUMBOUNDLO   368
+
+#define OFFSET_REG_DLCFG0       376
+#define OFFSET_REG_DLCFG1       384
+#define OFFSET_REG_DLBOUND0     392
+#define OFFSET_REG_DLBOUND1     400
+#define OFFSET_REG_DLBOUND2     408
+#define OFFSET_REG_DLBOUND3     416
+#define OFFSET_REG_DLBOUND4     424
+#define OFFSET_REG_DLBOUND5     432
+#define OFFSET_REG_DLBOUND6     440
+#define OFFSET_REG_DLBOUND7     448
+#define OFFSET_REG_DLBOUND8     456
+#define OFFSET_REG_DLBOUND9     464
+#define OFFSET_REG_DLBOUND10    472
+#define OFFSET_REG_DLBOUND11    480
+#define OFFSET_REG_DLBOUND12    488
+#define OFFSET_REG_DLBOUND13    496
+#define OFFSET_REG_DLBOUND14    504
+#define OFFSET_REG_DLBOUND15    512
+#define OFFSET_REG_DLBOUND16    520
+#define OFFSET_REG_DLBOUND17    528
+#define OFFSET_REG_DLBOUND18    536
+#define OFFSET_REG_DLBOUND19    544
+#define OFFSET_REG_DLBOUND20    552
+#define OFFSET_REG_DLBOUND21    560
+#define OFFSET_REG_DLBOUND22    568
+#define OFFSET_REG_DLBOUND23    576
+#define OFFSET_REG_DLBOUND24    584
+#define OFFSET_REG_DLBOUND25    592
+#define OFFSET_REG_DLBOUND26    600
+#define OFFSET_REG_DLBOUND27    608
+#define OFFSET_REG_DLBOUND28    616
+#define OFFSET_REG_DLBOUND29    624
+#define OFFSET_REG_DLBOUND30    632
+#define OFFSET_REG_DLBOUND31    640
+
+#define OFFSET_REG_DMAINCALL    648
+#define OFFSET_REG_DRETURNPC    656
+#define OFFSET_REG_DFZRETURN    664
+
 /* Size of stack frame, word/double word alignment */
-#define OFFSET_SIZE             288
+#define OFFSET_SIZE             672
 
 #define PCB_KERNEL_SP          0
 #define PCB_USER_SP            8
 #define PCB_PREEMPT_COUNT      16
+#define PCB_KERNEL_STACK_BASE  24
+#define PCB_USER_STACK_BASE    32
 
 /* offset in switch_to */
 #define SWITCH_TO_RA     0

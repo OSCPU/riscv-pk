@@ -43,9 +43,9 @@
 
 #include <stdarg.h>
 #include <string.h>
-#include <sys/syscall.h>
+#include <stddasics.h>
 
-static unsigned int mini_itoa(
+static unsigned int ATTR_UFREEZONE_TEXT mini_itoa(
     long value, unsigned int radix, unsigned int uppercase,
     unsigned int unsig, char *buffer, unsigned int zero_pad)
 {
@@ -95,7 +95,7 @@ struct mini_buff
     unsigned int buffer_len;
 };
 
-static int _putc(int ch, struct mini_buff *b)
+static int ATTR_UFREEZONE_TEXT _putc(int ch, struct mini_buff *b)
 {
     if ((unsigned int)((b->pbuffer - b->buffer) + 1) >=
         b->buffer_len)
@@ -105,7 +105,7 @@ static int _putc(int ch, struct mini_buff *b)
     return 1;
 }
 
-static int _puts(char *s, unsigned int len, struct mini_buff *b)
+static int ATTR_UFREEZONE_TEXT _puts(char *s, unsigned int len, struct mini_buff *b)
 {
     unsigned int i;
 
@@ -119,7 +119,7 @@ static int _puts(char *s, unsigned int len, struct mini_buff *b)
     return len;
 }
 
-static int mini_vsnprintf(
+static int ATTR_UFREEZONE_TEXT mini_vsnprintf(
     char *buffer, unsigned int buffer_len, const char *fmt,
     va_list va)
 {
@@ -209,7 +209,7 @@ end:
     return b.pbuffer - b.buffer;
 }
 
-int vprintf(const char *fmt, va_list _va)
+int ATTR_UFREEZONE_TEXT vprintf(const char *fmt, va_list _va)
 {
     va_list va;
     va_copy(va, _va);
@@ -221,12 +221,12 @@ int vprintf(const char *fmt, va_list _va)
 
     buff[ret] = '\0';
 
-    sys_write(buff);
+    dasics_umaincall(UMAINCALL_WRITE, (uint64_t)buff, 0, 0);
 
     return ret;
 }
 
-int printf(const char *fmt, ...)
+int ATTR_UFREEZONE_TEXT printf(const char *fmt, ...)
 {
     int ret = 0;
     va_list va;

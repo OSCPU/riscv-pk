@@ -29,13 +29,14 @@
 #define INCLUDE_STRING_H_
 
 #include <type.h>
+#include <kattr.h>
 
-void kmemcpy(uint8_t *dest, const uint8_t *src, uint32_t len);
-void kmemset(void *dest, uint8_t val, uint32_t len);
-void kbzero(void *dest, uint32_t len);
-int kstrcmp(const char *str1, const char *str2);
-char *kstrcpy(char *dest, const char *src);
-char *kstrcat(char *dest, const char *src);
-int kstrlen(const char *src);
+void  ATTR_SFREEZONE_TEXT kmemcpy(uint8_t *dest, const uint8_t *src, uint32_t len);
+void  ATTR_SFREEZONE_TEXT kmemset(void *dest, uint8_t val, uint32_t len);
+void  ATTR_SFREEZONE_TEXT kbzero(void *dest, uint32_t len);
+int   ATTR_SFREEZONE_TEXT kstrcmp(const char *str1, const char *str2);
+char *ATTR_SFREEZONE_TEXT kstrcpy(char *dest, const char *src);
+char *ATTR_SFREEZONE_TEXT kstrcat(char *dest, const char *src);
+int   ATTR_SFREEZONE_TEXT kstrlen(const char *src);
 
 #endif

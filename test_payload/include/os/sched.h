@@ -46,6 +46,31 @@ typedef struct regs_context
     reg_t sepc;
     reg_t sbadaddr;
     reg_t scause;
+
+    /* Saved user registers */
+    reg_t ustatus;
+    reg_t uepc;
+    reg_t ubadaddr;
+    reg_t ucause;
+    reg_t utvec;
+    reg_t uie;
+    reg_t uip;
+    reg_t uscratch;
+
+    /* Saved DASICS supervisor registers */
+    reg_t dasicsUMainCfg;
+    reg_t dasicsUMainBoundHi;
+    reg_t dasicsUMainBoundLo;
+
+    /* Saved DASICS user registers */
+    reg_t dasicsLibCfg0;
+    reg_t dasicsLibCfg1;
+    reg_t dasicsLibBounds[32];
+
+    reg_t dasicsMaincallEntry;
+    reg_t dasicsReturnPC;
+    reg_t dasicsFreeZoneReturnPC;
+
 } regs_context_t;
 
 /* used to save register infomation in switch_to */

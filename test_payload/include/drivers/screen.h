@@ -27,24 +27,26 @@
 #ifndef INCLUDE_CONSOLE_H_
 #define INCLUDE_CONSOLE_H_
 
-extern int screen_cursor_x;
-extern int screen_cursor_y;
+#include <kdasics.h>
 
-void vt100_move_cursor(int, int);
+extern int ATTR_SFREEZONE_DATA screen_cursor_x;
+extern int ATTR_SFREEZONE_DATA screen_cursor_y;
+
+void ATTR_SFREEZONE_TEXT vt100_move_cursor(int, int);
 
 /* configuring screen properties */
-void init_screen(void);
+void ATTR_SLIB_TEXT init_screen(void);
 
 /* clear screen */
-void screen_clear(void);
+void ATTR_SFREEZONE_TEXT screen_clear(void);
 
 /* reflush screen buffer */
-void screen_reflush(void);
+void ATTR_SFREEZONE_TEXT screen_reflush(void);
 
 /* screen write string */
-void screen_write(char *buff);
+void ATTR_SFREEZONE_TEXT screen_write(char *buff);
 
 /* move cursor int (x,y) */
-void screen_move_cursor(int x, int y);
+void ATTR_SFREEZONE_TEXT screen_move_cursor(int x, int y);
 
 #endif

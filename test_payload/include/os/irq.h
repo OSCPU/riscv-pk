@@ -47,21 +47,21 @@ enum IrqCode
 
 enum ExcCode
 {
-    EXCC_INST_MISALIGNED  = 0,
-    EXCC_INST_ACCESS      = 1,
-    EXCC_BREAKPOINT       = 3,
-    EXCC_LOAD_ACCESS      = 5,
-    EXCC_STORE_ACCESS     = 7,
-    EXCC_SYSCALL          = 8,
-    EXCC_INST_PAGE_FAULT  = 12,
-    EXCC_LOAD_PAGE_FAULT  = 13,
-    EXCC_STORE_PAGE_FAULT = 15,
-    EXCC_DASICS_MODEU_INST_ACCESS_FAULT = 16,
-    EXCC_DASICS_MODES_INST_ACCESS_FAULT = 17,
-    EXCC_DASICS_MODEU_LOAD_ACCESS_FAULT = 18,
-    EXCC_DASICS_MODES_LOAD_ACCESS_FAULT = 19,
-    EXCC_DASICS_MODEU_STORE_ACCESS_FAULT = 20,
-    EXCC_DASICS_MODES_STORE_ACCESS_FAULT = 21,
+    EXCC_INST_MISALIGNED      = 0,
+    EXCC_INST_ACCESS          = 1,
+    EXCC_BREAKPOINT           = 3,
+    EXCC_LOAD_ACCESS          = 5,
+    EXCC_STORE_ACCESS         = 7,
+    EXCC_SYSCALL              = 8,
+    EXCC_INST_PAGE_FAULT      = 12,
+    EXCC_LOAD_PAGE_FAULT      = 13,
+    EXCC_STORE_PAGE_FAULT     = 15,
+    EXCC_DASICS_UINST_ACCESS  = 16,
+    EXCC_DASICS_SINST_ACCESS  = 17,
+    EXCC_DASICS_ULOAD_ACCESS  = 18,
+    EXCC_DASICS_SLOAD_ACCESS  = 19,
+    EXCC_DASICS_USTORE_ACCESS = 20,
+    EXCC_DASICS_SSTORE_ACCESS = 21,
     EXCC_COUNT
 };
 
@@ -83,6 +83,7 @@ extern void reset_irq_timer();
 extern void handle_int(regs_context_t *regs, uint64_t interrupt, uint64_t cause);
 extern void handle_other(regs_context_t *regs, uint64_t interrupt, uint64_t cause);
 extern void handle_syscall(regs_context_t *regs, uint64_t interrupt, uint64_t cause);
+extern void handle_dasics(regs_context_t *regs, uint64_t interrupt, uint64_t cause);
 
 extern void enable_interrupt(void);
 extern void disable_interrupt(void);

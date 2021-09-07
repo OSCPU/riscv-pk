@@ -30,21 +30,22 @@
 
 #include <os/syscall_number.h>
 #include <stdint.h>
+#include <stdattr.h>
 
-extern long invoke_syscall(long, long, long, long);
+extern long ATTR_UMAIN_TEXT invoke_syscall(long, long, long, long);
 
-void sys_exit(void);
-void sys_sleep(uint32_t);
-void sys_yield();
+void ATTR_UMAIN_TEXT sys_exit(void);
+void ATTR_UMAIN_TEXT sys_sleep(uint32_t);
+void ATTR_UMAIN_TEXT sys_yield();
 
-void sys_futex_wait(volatile uint64_t *val_addr, uint64_t val);
-void sys_futex_wakeup(volatile uint64_t *val_addr, int num_wakeup);
+void ATTR_UMAIN_TEXT sys_futex_wait(volatile uint64_t *val_addr, uint64_t val);
+void ATTR_UMAIN_TEXT sys_futex_wakeup(volatile uint64_t *val_addr, int num_wakeup);
 
-void sys_write(char *);
-void sys_move_cursor(int, int);
-void sys_reflush();
+void ATTR_UMAIN_TEXT sys_write(char *);
+void ATTR_UMAIN_TEXT sys_move_cursor(int, int);
+void ATTR_UMAIN_TEXT sys_reflush();
 
-long sys_get_timebase();
-long sys_get_tick();
+long ATTR_UMAIN_TEXT sys_get_timebase();
+long ATTR_UMAIN_TEXT sys_get_tick();
 
 #endif

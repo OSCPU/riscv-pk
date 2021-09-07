@@ -2,40 +2,36 @@
 #include <arch/common.h>
 #include <kio.h>
 #include <os/string.h>
-#include <os/lock.h>
-#include <os/sched.h>
-#include <os/irq.h>
 
 #define SCREEN_WIDTH    80
 #define SCREEN_HEIGHT   50
 
-int screen_cursor_x;
-int screen_cursor_y;
+int ATTR_SFREEZONE_DATA screen_cursor_x;
+int ATTR_SFREEZONE_DATA screen_cursor_y;
 
 /* screen buffer */
-char new_screen[SCREEN_HEIGHT * SCREEN_WIDTH] = {0};
-char old_screen[SCREEN_HEIGHT * SCREEN_WIDTH] = {0};
+char ATTR_SFREEZONE_DATA new_screen[SCREEN_HEIGHT * SCREEN_WIDTH] = {0};
+char ATTR_SFREEZONE_DATA old_screen[SCREEN_HEIGHT * SCREEN_WIDTH] = {0};
 
 /* cursor position */
-void vt100_move_cursor(int x, int y)
+void ATTR_SFREEZONE_TEXT vt100_move_cursor(int x, int y)
 {
     // \033[y;xH
-    disable_preempt();
+    dasics_smaincall(SMAINCALL_DISABLE_PREEMPT, 0, 0, 0);
     printk("%c[%d;%dH", 27, y, x);
-    current_running->cursor_x = x;
-    current_running->cursor_y = y;
-    enable_preempt();
+    dasics_smaincall(SMAINCALL_STORE_CURSOR, (uint64_t)x, (uint64_t)y, 0);
+    dasics_smaincall(SMAINCALL_ENABLE_PREEMPT, 0, 0, 0);
 }
 
 /* clear screen */
-static void vt100_clear()
+static void ATTR_SFREEZONE_TEXT vt100_clear()
 {
     // \033[2J
     printk("%c[2J", 27);
 }
 
 /* write a char */
-static void screen_write_ch(char ch)
+static void ATTR_SFREEZONE_TEXT screen_write_ch(char ch)
 {
     if (ch == '\n')
     {
@@ -47,17 +43,16 @@ static void screen_write_ch(char ch)
         new_screen[(screen_cursor_y - 1) * SCREEN_WIDTH + (screen_cursor_x - 1)] = ch;
         screen_cursor_x++;
     }
-    current_running->cursor_x = screen_cursor_x;
-    current_running->cursor_y = screen_cursor_y;
+    dasics_smaincall(SMAINCALL_STORE_CURSOR, (uint64_t)screen_cursor_x, (uint64_t)screen_cursor_y, 0);
 }
 
-void init_screen(void)
+void ATTR_SLIB_TEXT init_screen(void)
 {
     // vt100_hidden_cursor();
     vt100_clear();
 }
 
-void screen_clear(void)
+void ATTR_SFREEZONE_TEXT screen_clear(void)
 {
     int i, j;
     for (i = 0; i < SCREEN_HEIGHT; i++)
@@ -72,15 +67,14 @@ void screen_clear(void)
     screen_reflush();
 }
 
-void screen_move_cursor(int x, int y)
+void ATTR_SFREEZONE_TEXT screen_move_cursor(int x, int y)
 {
     screen_cursor_x = x;
     screen_cursor_y = y;
-    current_running->cursor_x = screen_cursor_x;
-    current_running->cursor_y = screen_cursor_y;
+    dasics_smaincall(SMAINCALL_STORE_CURSOR, (uint64_t)screen_cursor_x, (uint64_t)screen_cursor_y, 0);
 }
 
-void screen_write(char *buff)
+void ATTR_SFREEZONE_TEXT screen_write(char *buff)
 {
     int i = 0;
     int l = kstrlen(buff);
@@ -97,7 +91,7 @@ void screen_write(char *buff)
  * the fact that in order to speed up printing, we only refresh
  * the characters that have been modified since this time.
  */
-void screen_reflush(void)
+void ATTR_SFREEZONE_TEXT screen_reflush(void)
 {
     int i, j;
 
@@ -110,7 +104,7 @@ void screen_reflush(void)
             if (new_screen[i * SCREEN_WIDTH + j] != old_screen[i * SCREEN_WIDTH + j])
             {
                 vt100_move_cursor(j + 1, i + 1);
-                port_write_ch(new_screen[i * SCREEN_WIDTH + j]);
+                dasics_smaincall(SMAINCALL_WRITE_CH, new_screen[i * SCREEN_WIDTH + j], 0, 0);
                 old_screen[i * SCREEN_WIDTH + j] = new_screen[i * SCREEN_WIDTH + j];
             }
         }

@@ -145,6 +145,25 @@ static void send_ipi_many(uintptr_t* pmask, int event)
   }
 }
 
+static uintptr_t mcall_modify_smain_bound(uintptr_t mepc, uint64_t newhi, uint64_t newlo)
+{
+  uintptr_t oldhi = read_csr(0xbc1);
+  uintptr_t oldlo = read_csr(0xbc2);
+
+  if (mepc >= oldlo && mepc <= oldhi)
+  {
+    write_csr(0xbc1, newhi);
+    write_csr(0xbc2, newlo);
+    return 0;
+  }
+  else
+  {
+    printm("warning: mepc 0x%lx is not within smain bound (0x%lx ~ 0x%lx), thus has no permission to modify ...\n",
+      mepc, oldlo, oldhi);
+    return -ENOSYS;
+  }
+}
+
 void mcall_trap(uintptr_t* regs, uintptr_t mcause, uintptr_t mepc)
 {
   write_csr(mepc, mepc + 4);
@@ -178,14 +197,18 @@ send_ipi:
     case SBI_SHUTDOWN:
       retval = mcall_shutdown();
       break;
-   case SBI_READFDT:
+    case SBI_READFDT:
       retval = mcall_fdt_read(arg0);
-      break;    case SBI_SET_TIMER:
+      break;
+    case SBI_SET_TIMER:
 #if __riscv_xlen == 32
       retval = mcall_set_timer(arg0 + ((uint64_t)arg1 << 32));
 #else
       retval = mcall_set_timer(arg0);
 #endif
+      break;
+    case SBI_MODIFY_SMAIN_BOUND:
+      retval = mcall_modify_smain_bound(mepc, arg0, arg1);
       break;
     default:
       retval = -ENOSYS;
@@ -215,6 +238,14 @@ void redirect_trap(uintptr_t epc, uintptr_t mstatus, uintptr_t badaddr)
 void pmp_trap(uintptr_t* regs, uintptr_t mcause, uintptr_t mepc)
 {
   redirect_trap(mepc, read_csr(mstatus), read_csr(mtval));
+}
+
+void dasics_trap(uintptr_t* regs, uintptr_t mcause, uintptr_t mepc)
+{
+  printm("Info: Enter dasics_trap (mtrap.c), mcause = 0x%x, mepc = 0x%x, sbadaddr = 0x%x\n",
+    mcause, mepc, read_csr(sbadaddr));
+  // redirect_trap(mepc, read_csr(mstatus), read_csr(sbadaddr));
+  write_csr(mepc, mepc + 4);
 }
 
 static void machine_page_fault(uintptr_t* regs, uintptr_t mcause, uintptr_t mepc)
