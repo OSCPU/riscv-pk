@@ -242,10 +242,11 @@ void pmp_trap(uintptr_t* regs, uintptr_t mcause, uintptr_t mepc)
 
 void dasics_trap(uintptr_t* regs, uintptr_t mcause, uintptr_t mepc)
 {
-  printm("Info: Enter dasics_trap (mtrap.c), mcause = 0x%x, mepc = 0x%x, sbadaddr = 0x%x\n",
-    mcause, mepc, read_csr(sbadaddr));
-  // redirect_trap(mepc, read_csr(mstatus), read_csr(sbadaddr));
-  write_csr(mepc, mepc + 4);
+  printm("Info: DASICS exception occurs, mcause = 0x%x, mepc = 0x%x, mbadaddr = 0x%x\n",
+    mcause, mepc, read_csr(mbadaddr));
+  printm("Info: Ready to shutdown the program ...\n");
+  // write_csr(mepc, mepc + 4);
+  mcall_shutdown(0);  // Shutdown the whole program when DASICS exception occurs
 }
 
 static void machine_page_fault(uintptr_t* regs, uintptr_t mcause, uintptr_t mepc)
