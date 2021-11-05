@@ -114,8 +114,8 @@ static void dasics_init()
    * TODO: Currently we assume DASICS-smain-text lies in this fixed segment, which
    * will be modified by smain calling sbi functions. It looks not perfect yet ...
   */
-  #define DASICS_SMAIN_HI 0x80500000lu
-  #define DASICS_SMAIN_LO 0x80200000lu
+  #define DASICS_SMAIN_HI 0xfffffffffffffffflu  //0x80500000lu
+  #define DASICS_SMAIN_LO 0x0lu  //0x80200000lu
   write_csr(0xbc1, DASICS_SMAIN_HI);
   write_csr(0xbc2, DASICS_SMAIN_LO);
 }

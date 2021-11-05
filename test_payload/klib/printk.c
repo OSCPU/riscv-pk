@@ -198,7 +198,7 @@ int ATTR_SFREEZONE_TEXT vprintk(const char *fmt, va_list _va)
 
     buff[ret] = '\0';
 
-    dasics_smaincall(SMAINCALL_DISABLE_PREEMPT, 0, 0, 0);
+    // dasics_smaincall(SMAINCALL_DISABLE_PREEMPT, 0, 0, 0);
     dasics_smaincall(SMAINCALL_WRITE, (uint64_t)buff, 0, 0);
     /*
     for (int i = 0; i < ret; ++i) {
@@ -211,7 +211,7 @@ int ATTR_SFREEZONE_TEXT vprintk(const char *fmt, va_list _va)
         }
     }
     */
-    dasics_smaincall(SMAINCALL_ENABLE_PREEMPT, 0, 0, 0);
+    // dasics_smaincall(SMAINCALL_ENABLE_PREEMPT, 0, 0, 0);
 
     return ret;
 }
